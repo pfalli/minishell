@@ -27,6 +27,7 @@ bool parser(t_data *structure, t_prompt *prompt)
     return true;
 }
 
+
 // to build the token list
 t_token_node *lexing(t_data *structure, t_prompt *prompt) 
 {
@@ -41,10 +42,19 @@ t_token_node *lexing(t_data *structure, t_prompt *prompt)
     return (token);
 }
 
+
 //to recognize the tokens in a binary tree
 t_token *parsing(t_token_node *tokens, t_prompt *prompt)
 {
     // init_binary_tree
 
     // init_command_table
+}
+
+int main (int ac, char **av, chart **envp)
+{
+    while(1)
+    {
+        show_prompt();
+    }
 }

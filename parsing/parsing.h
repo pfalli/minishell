@@ -16,7 +16,6 @@
 #define RED "\x1b[31m"
 #define RESET "\x1b[0m"
 
-#include "minishell.h"
 #include <stdlib.h>
 #include <unistd.h>
 #include <stdio.h>
@@ -32,6 +31,13 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 
+// **** to delete ****
+
+//  typedef struct s_data
+//  {
+//      tree;
+//  }                                   t_data;
+
 // ****LEXING STRUCTURE****
 
 typedef struct s_prompt
@@ -43,12 +49,13 @@ typedef struct s_prompt
     char *whitespace;
     char *curr_dir;
     int word_count;
+    char *ptr_prompt;
     
-}                                   t_prompt
+}                                   t_prompt;
 
 typedef struct s_token
 {
-	t_type	type;
+	//t_type	type;
     char *value;
 	char **arr;
 	struct s_token *next;
@@ -60,21 +67,20 @@ typedef struct s_token_node
 
     struct s_token_node *left;
     struct s_token_node *right;                      
-}                                   t_token_node
+}                                   t_token_node;
 
-typedef enum s_type
-{
-	END;
-	ERROR;
-	PIPE;
-	REDIRECTION_IN;
-    REDIRECTION_OUT;
-	WORD;
-	SIMPLE_CMD;
-	BUILTIN_CMD;
-    ARGUMENT;
-    FILE_EOF;
-}									t_type;
+//  typedef enum s_type
+//  {
+//      END,
+//      ERROR,
+//      PIPE,
+//      REDIRECTION,
+//      WORD,
+//      SIMPLE_CMD,
+//      BUILTIN_CMD,
+//      ARGUMENT,
+//      FILE_EOF
+//  }									t_type;
 
 
 typedef struct s_binary_tree

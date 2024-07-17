@@ -43,6 +43,18 @@ t_token *init_token_struct(t_data *structure, t_prompt *prompt)
 
 t_type search_token_type(t_prompt *prompt)
 {
+    t_type type;
 
+    if(prompt->ptr_prompt == NULL)
+        prompt->ptr_prompt == prompt->message;
+    if(strchr(prompt->symbols, prompt->message))
+    {
+        if(prompt->message == '|') // multiple pipes
+            type = PIPE;
+        else if(prompt->message == '<' || prompt->message == '>') // multuiple redirections
+            type == REDIRECTION;
+    }
+    else
+        type = WORD; // function to recognize command, argument, ...
     return(type);
 }
