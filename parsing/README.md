@@ -24,35 +24,6 @@ We are required to build a mini shell (command-line interpreter) that mimics the
 
 ---------------------------------------------------------------------------------------------------------------------------
 
-'FORK'
-
-Creating a child process using fork() is a common pattern in Unix-like operating systems for several reasons, particularly when you want to execute a new program within a process. Here's why and how it works:
-
-Why Create a Child Process?
-Isolation: Child processes are executed in a separate memory space. This isolation prevents the child process from affecting the parent process's memory and resources directly. If a child process encounters an error or crashes, it doesn't directly impact the parent process or other child processes.
-
-Concurrency: By creating child processes, a program can perform multiple tasks concurrently. This is especially useful for servers and applications that need to handle multiple requests or tasks at the same time.
-
-Executing New Programs: In Unix-like systems, creating a child process is a prerequisite for executing a new program within a process. The fork() system call creates a new process, and then exec() family functions (like execve() in your code) replace the child process's memory space with a new program. This pattern allows the parent process to continue running and possibly manage multiple child processes.
-
-How Does the Child Process Work?
-Creation: When fork() is called, the operating system creates a new process. This new process is nearly identical to the calling (parent) process. Both processes continue executing from the point where fork() was called, but they can differentiate their behavior based on the return value of fork().
-
-Return Value of fork():
-
-In the parent process, fork() returns the Process ID (PID) of the newly created child process.
-In the child process, fork() returns 0.
-If fork() fails, it returns -1 in the parent process.
-Executing a New Program: In the child process (where fork() returned 0), you typically use an exec() family function (like execve() in your example) to replace the child process's memory space with a new program. The execve() function loads the binary executable specified in its first argument, passing the command-line arguments and environment variables provided.
-
-Independence: Once execve() is successfully called in the child process, the original program in the child process is completely replaced by the new program. The child process then executes independently of the parent process, although it can communicate with the parent or other processes through inter-process communication mechanisms if needed.
-
-Termination and Cleanup: When a child process finishes execution, it becomes a "zombie" process until its parent process retrieves its exit status (usually using wait() or waitpid()). This step is crucial for properly cleaning up system resources.
-
-In summary, creating a child process allows a program to perform multiple tasks simultaneously, execute new programs, and ensure isolation between different tasks or services.
-
-
-
 'ENVP'
 
 char *envp[]: This is an array of strings representing the environment variables available to the program at the time of execution. Each string is in the form of key=value. This parameter is not as commonly used as argc and argv, and it's not part of the standard definition of main in ISO C. However, it's supported by some operating systems (like UNIX and UNIX-like systems) as a way to pass the entire environment of the program. This can be useful for programs that need to access environment variables without using other environment-access functions like getenv.
