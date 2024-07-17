@@ -12,6 +12,18 @@
 
 #include "parsing.h"
 
+t_token_node init_all(t_data *structure, t_prompt *prompt)
+{
+    t_token_node *list;
+    t_token_node *head = NULL;
+
+    // create list of nodes
+    list = create_node(structure, prompt);
+
+    add_node_to_list(&head, list);
+    return(head);
+}
+
 t_token_node *create_node(t_data *structure, t_prompt *prompt)
 {
     t_token_node *node;
