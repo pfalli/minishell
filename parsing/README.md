@@ -91,3 +91,19 @@ PSEUDOCODE
 
 
 ------------------------------------------------------------------------------------------------------------------------------------------------
+
+step_by_step
+
+    Prompt implementation
+    HashTable functions implementation
+    Tokenizer implementation
+    Variables expansion implementation
+    Builtins implementation
+    Parse and execute sistem design
+    Signals implementation
+    Parsing implementation
+    Execute implementation
+    Norme
+    Bugs hunting
+
+![alt text](LRParser.png)
