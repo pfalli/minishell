@@ -12,61 +12,110 @@
 
 #include "parsing.h"
 
-t_token_node init_all(t_data *structure, t_prompt *prompt)
+t_token *create_linked_list(t_prompt *prompt)
 {
-    t_token_node *list;
-    t_token_node *head = NULL;
-
-    // create list of nodes
-    list = create_node(structure, prompt);
-
-    add_node_to_list(&head, list);
+    t_token *head = NULL;
+    t_token *new = NULL;
+    t_token *current = NULL;
+    char *word = strtok(prompt->message, " ");
+    
+    while(word != NULL)
+    {  
+        new = create_token(word);
+        if (!new)
+        {
+            ft_free_token_list(head);
+            return NULL;
+        }
+	    if (head == NULL)
+        {
+            head = new;
+            current = new;
+        }
+        else
+        {
+            current->next = new;
+            new->prev = current;
+            current = new;
+        }
+        word = strtok(NULL, " ");
+    }
     return(head);
 }
 
-t_token_node *create_node(t_data *structure, t_prompt *prompt)
+t_token *create_token(char *word)
 {
-    t_token_node *node;
+    t_token *new_token;
+    int i = 0;
+    int length = strlen(word);
 
-    node = (t_token_node*)malloc(sizeof(t_token_node));
-    if(!token)
+    new_token = malloc(sizeof(t_token));
+    if(new_token == NULL)
         return NULL;
-    node->token = init_token_struct();
-    node->next = NULL;
-    return(node);
+    new_token->value = (char *)malloc(sizeof(char) * (length + 1));
+    if (new_token->value == NULL)
+	{
+		free(new_token);
+		return (NULL);
+	}
+    while (i < length)
+	{
+		new_token->value[i] = word[i];
+		i++;
+	}
+    new_token->value[i] = 0;
+    new_token->next = NULL;
+    new_token->prev = NULL;
+    new_token->type = search_token_type(word);
+    return(new_token);
 }
 
-t_token *init_token_struct(t_data *structure, t_prompt *prompt)
-{
-    t_token token;
-    t_type type;
-
-    type = search_token_type(prompt);
-    if (type == WORD)
-        // full token
-    else if (type == PIPE)
-        // pipe operation
-    else if (type == REDIRECTION)
-        // redirect token
-    else
-        // error
-    return(token);
-}
-
-t_type search_token_type(t_prompt *prompt)
+t_type search_token_type(char *word)
 {
     t_type type;
 
-    if(prompt->ptr_prompt == NULL)
-        prompt->ptr_prompt == prompt->message;
-    if(strchr(prompt->symbols, prompt->message))
-    {
-        if(prompt->message == '|') // multiple pipes
-            type = PIPE;
-        else if(prompt->message == '<' || prompt->message == '>') // multuiple redirections
-            type == REDIRECTION;
-    }
+    if(strcmp(word, "|") == 0)
+        type = PIPE;
+    else if(strcmp(word, "<") == 0 || strcmp(word, ">") == 0)
+        type = REDIRECTION;
     else
-        type = WORD; // function to recognize command, argument, ...
+        type = WORD;
     return(type);
+}
+
+void	ft_free_token_list(t_token *token_list)
+{
+	t_token	*token_list_holder;
+
+	if (!token_list)
+		return ;
+	while (token_list)
+	{
+		free(token_list->value);
+		token_list_holder = token_list;
+		token_list = token_list->next;
+		free(token_list_holder);
+	}
+	return ;
+}
+
+int main()
+{
+    t_prompt prompt;
+    t_token *token_list;
+    t_token *current_token;
+    int i = 0;
+
+    init_prompt(&prompt);
+
+    token_list = create_linked_list(&prompt);
+
+    current_token = token_list;
+    while (current_token != NULL)
+    {
+        printf("Token[%i]: %s --> type: %d\n", i, current_token->value, current_token->type);
+        current_token = current_token->next;
+        i++;
+    }
+    return 0;
 }

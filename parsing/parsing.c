@@ -12,49 +12,53 @@
 
 #include "parsing.h"
 
-bool parser(t_data *structure, t_prompt *prompt)
+void parser(t_prompt *prompt)
 {
-    t_token_node *token;
+    //t_token_node *token;
 
     init_prompt(prompt);
 
     // lexing: tokens(nodes)
-    token = lexing(structure, prompt);
+    lexing(prompt);
 
     // parsing: structure->tree
-    parsing(token, prompt);
-
-    return true;
+    //parsing(token, prompt);
 }
 
 
 // to build the token list
-t_token_node *lexing(t_data *structure, t_prompt *prompt) 
+t_token *lexing(t_prompt *prompt) 
 {
-    t_token_node    *token;
+    t_token    *token_list = NULL;
 
-    token = create_node(structure, prompt); // return head node
-
+    token_list = create_linked_list(t_prompt *prompt);
+    
     // find token
 
     // add node to list
 
-    return (token);
+    return (token_list);
 }
 
 
-//to recognize the tokens in a binary tree
-t_token *parsing(t_token_node *tokens, t_prompt *prompt)
-{
-    // init_binary_tree
+//  //to recognize the tokens in a binary tree
+//  t_token *parsing(t_token_node *tokens, t_prompt *prompt)
+//  {
+//      // init_binary_tree
+//  
+//      // init_command_table
+//  }
 
-    // init_command_table
-}
 
-int main (int ac, char **av, chart **envp)
+int main(void)
 {
-    while(1)
+    t_prompt prompt;
+
+    while (1)
     {
-        show_prompt();
+        parser(&prompt);
+    
     }
+
+    return 0;
 }

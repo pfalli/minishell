@@ -16,6 +16,7 @@
 #define RED "\x1b[31m"
 #define RESET "\x1b[0m"
 
+#include <stdbool.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <stdio.h>
@@ -31,14 +32,21 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 
-// **** to delete ****
-
-//  typedef struct s_data
-//  {
-//      tree;
-//  }                                   t_data;
 
 // ****LEXING STRUCTURE****
+
+typedef enum s_type
+{
+    END,
+    ERROR,
+    PIPE,
+    REDIRECTION,
+    WORD, // command or argument
+    SIMPLE_CMD,
+    BUILTIN_CMD,
+    ARGUMENT,
+    FILE_EOF
+}									t_type;
 
 typedef struct s_prompt
 {
@@ -50,43 +58,33 @@ typedef struct s_prompt
     char *curr_dir;
     int word_count;
     char *ptr_prompt;
+    char **multi_array;
     
 }                                   t_prompt;
 
 typedef struct s_token
 {
-	//t_type	type;
+	t_type	type;
     char *value;
-	char **arr;
-	struct s_token *next;
+    struct s_token *next;
+    struct s_token *prev;
+    int token_count;
 }									t_token;
 
-typedef struct s_token_node                                          
-{     
-    t_token node;
 
-    struct s_token_node *left;
-    struct s_token_node *right;                      
-}                                   t_token_node;
+// **************************************************************
 
-//  typedef enum s_type
-//  {
-//      END,
-//      ERROR,
-//      PIPE,
-//      REDIRECTION,
-//      WORD,
-//      SIMPLE_CMD,
-//      BUILTIN_CMD,
-//      ARGUMENT,
-//      FILE_EOF
-//  }									t_type;
-
-
-typedef struct s_binary_tree
-{
-    t_token_node *root;
-}                                   t_binary_tree;
-
+void parser(t_prompt *prompt);
+t_token *lexing(t_prompt *prompt);
+t_token *parsing(t_token *tokens, t_prompt *prompt);
+void init_prompt(t_prompt *prompt);
+t_token *create_linked_list(t_prompt *prompt);
+t_token *create_token(char *word);
+t_token init_token(char *word);
+t_type search_token_type(char *word);
+void add_node_to_list(t_token **head, t_token **current, t_token *new_node);
+t_token init_word(t_prompt *prompt);
+char *ft_strtok(char *str, const char *delim);
+void	ft_free_token_list(t_token *token_list);
 
 #endif
