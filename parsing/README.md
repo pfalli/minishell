@@ -1,3 +1,82 @@
+!Structure of t_ast Node (Including Pipes)
+
+t_ast
++-------------------+
+| node_type         |  -> NODE_CMD or NODE_PIPE
+|                   |
+| value             |  -> char **value (array of strings, only for NODE_CMD)
+|  +------------+   |     +---------------------+
+|  | value[0]   |----->   | "command"            |
+|  +------------+   |     +---------------------+
+|  | value[1]   |----->   | "arg1"               |
+|  +------------+   |     +---------------------+
+|  | value[2]   |----->   | "arg2"               |
+|  +------------+   |     +---------------------+
+|  | ...        |   |
+|  +------------+   |
+|                   |
+| redir_list        |  -> List of redirection nodes (only for NODE_CMD)
+|  +------------+   |     +---------------------+
+|  | redir[0]   |----->   | redirection node     |
+|  +------------+   |     +---------------------+
+|  | redir[1]   |----->   | redirection node     |
+|  +------------+   |     +---------------------+
+|  | ...        |   |
+|  +------------+   |
+|                   |
+| left              |  -> t_ast * (left child, for pipes)
+| right             |  -> t_ast * (right child, for pipes)
++-------------------+
+
+!Example Token List and AST Node Creation with Pipes
+
+Assume a pipeline command like:
+
+echo arg1 | grep arg2 > output.txt
+
+!Token List
+
+
+token_list
++------------+      +------------+      +------------+      +------------+      +------------+      +------------+      +------------+
+| token_type |----> | TOKEN_WORD |      | TOKEN_WORD |      | TOKEN_PIPE |      | TOKEN_WORD |      | TOKEN_WORD |      | TOKEN_REDIR|      | TOKEN_WORD |
+| value      |----> | "echo"     |----> | "arg1"     |----> | "|"        |----> | "grep"     |----> | "arg2"     |----> | ">"        |----> | "output.txt" |
+| next       |----> | next       |----> | next       |----> | next       |----> | next       |----> | next       |----> | next       |----> | NULL        |
++------------+      +------------+      +------------+      +------------+      +------------+      +------------+      +------------+
+
+!Resulting AST Structure
+
+
+                            t_ast (pipe)
+                            +-------------------+
+                            | node_type         |  -> NODE_PIPE
+                            | left              |  -> t_ast (echo command)
+                            | right             |  -> t_ast (grep command)
+                            +-------------------+
+                        /                           \
+     LEFT child (echo command)                     RIGHT child (grep command)
++-------------------+                           +-------------------+
+| node_type         |  -> NODE_CMD              | node_type         |  -> NODE_CMD
+| value             |  -> char **value          | value             |  -> char **value
+|  +------------+   |     +------------+        |  +------------+   |     +---------------------+
+|  | value[0]   |----->   | "echo"     |        |  | value[0]   |----->   | "grep"              |
+|  +------------+   |     +------------+        |  +------------+   |     +---------------------+
+|  | value[1]   |----->   | "arg1"     |        |  | value[1]   |----->   | "arg2"              |
+|  +------------+   |     +------------+        |  +------------+   |     +---------------------+
+|  | ...        |   |                           |  | ...        |   |
+|  +------------+   |                           |  +------------+   |
+| redir_list        |  -> NULL                  | redir_list        |  -> List of redirection nodes
++-------------------+                           |  +------------+   |     +---------------------+
+                                                |  | redir[0]   |----->   | redirection node     |
+                                                |  +------------+         | token_type = TOKEN_REDIR |
+                                                +-------------------+     | value = ">"            |
+                                                                          | target = "output.txt"  |
+                                                                          +---------------------
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
 We are required to build a mini shell (command-line interpreter) that mimics the bash, hence the name it wouldn’t be doing all the work that bash does, but the basic functionality:
 
     The shell will work only in interactive mode (no scripts, i.e. the executable takes no arguments)

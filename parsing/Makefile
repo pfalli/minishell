@@ -12,3 +12,7 @@ $(TARGET): $(OBJ)
 fclean:
 	rm -f $(OBJ) $(TARGET)
 .PHONY: all clean
+
+valgrind --leak-check=full
+
+gcc -g -Wall -Wextra -Werror lexing.c prompt.c init_tree.c -lreadline

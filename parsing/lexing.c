@@ -99,11 +99,32 @@ void	ft_free_token_list(t_token *token_list)
 	return ;
 }
 
+// Recursive function to print the tree
+void print_tree(t_tree* tree_node)
+{
+    int i = 0;
+
+    if (tree_node == NULL)
+        return;
+    printf("***Binary Tree***\n");
+    char **node = tree_node->value;
+    while (i < tree_node->num_tokens)
+    {
+        printf("Node[%d]: %s\n", i, node[i]);
+        printf("    type:%d\n", tree_node->type);
+        i++;
+    }
+    // print_tree(tree_node->left); for PIPE
+    print_tree(tree_node->right);
+}
+
 int main()
 {
     t_prompt prompt;
     t_token *token_list;
     t_token *current_token;
+    t_tree *tree_node;
+
     int i = 0;
 
     init_prompt(&prompt);
@@ -117,5 +138,9 @@ int main()
         current_token = current_token->next;
         i++;
     }
+
+    tree_node = create_tree(token_list);
+    print_tree(tree_node);
+
     return 0;
 }

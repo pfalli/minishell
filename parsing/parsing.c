@@ -12,14 +12,13 @@
 
 #include "parsing.h"
 
-void parser(t_prompt *prompt)
+void parser(t_token *token_list, t_prompt *prompt)
 {
-    //t_token_node *token;
+    t_token *token_list;
 
     init_prompt(prompt);
 
-    // lexing: tokens(nodes)
-    lexing(prompt);
+    token_list = lexing(prompt);
 
     // parsing: structure->tree
     //parsing(token, prompt);
@@ -29,13 +28,13 @@ void parser(t_prompt *prompt)
 // to build the token list
 t_token *lexing(t_prompt *prompt) 
 {
-    t_token    *token_list = NULL;
+    t_token    *token_list;
 
-    token_list = create_linked_list(t_prompt *prompt);
+    token_list = create_linked_list(prompt);
     
-    // find token
+    // 
 
-    // add node to list
+    // 
 
     return (token_list);
 }
@@ -48,17 +47,3 @@ t_token *lexing(t_prompt *prompt)
 //  
 //      // init_command_table
 //  }
-
-
-int main(void)
-{
-    t_prompt prompt;
-
-    while (1)
-    {
-        parser(&prompt);
-    
-    }
-
-    return 0;
-}

@@ -33,11 +33,11 @@
 #include <readline/history.h>
 
 
-// ****LEXING STRUCTURE****
+// ****TOKEN_LIST STRUCT****
 
 typedef enum s_type
 {
-    END,
+    END = 0,
     ERROR,
     PIPE,
     REDIRECTION,
@@ -72,6 +72,25 @@ typedef struct s_token
 }									t_token;
 
 
+// *** TREE STRUCT ***
+
+typedef enum s_tree_node_type
+{
+    TREE_CMD = 0,
+    TREE_PIPE
+}                                   t_tree_node_type;
+
+typedef struct s_tree
+{
+    t_tree_node_type type;
+    char **value;
+    struct s_tree *left;
+    struct s_tree *right;
+    int num_tokens;
+}                                   t_tree;
+
+
+
 // **************************************************************
 
 void parser(t_prompt *prompt);
@@ -86,5 +105,10 @@ void add_node_to_list(t_token **head, t_token **current, t_token *new_node);
 t_token init_word(t_prompt *prompt);
 char *ft_strtok(char *str, const char *delim);
 void	ft_free_token_list(t_token *token_list);
+
+t_tree *create_tree(t_token *token_list);
+t_tree *create_tree_node(t_token *token_list, int num_tokens);
+int count_tokens_list(t_token *token_list);
+void print_tree(t_tree* node);
 
 #endif
