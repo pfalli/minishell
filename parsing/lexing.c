@@ -100,23 +100,35 @@ void	ft_free_token_list(t_token *token_list)
 }
 
 // Recursive function to print the tree
-void print_tree(t_tree* tree_node)
+void print_tree(t_tree* tree_node) // I was't allocating properly the tree_node in create_tree_node
 {
     int i = 0;
 
     if (tree_node == NULL)
         return;
-    printf("***Binary Tree***\n");
-    char **node = tree_node->value;
     while (i < tree_node->num_tokens)
     {
-        printf("Node[%d]: %s\n", i, node[i]);
-        printf("    type:%d\n", tree_node->type);
+        printf("Node[%d]: %s\n", i, tree_node->value[i]);
+        printf("    type: %d\n", tree_node->type);
+        printf("    num_tokens: %i\n", tree_node->num_tokens);
         i++;
     }
-    // print_tree(tree_node->left); for PIPE
-    print_tree(tree_node->right);
+    
+
+    printf("*Left Child*\n");
+    printf("Node[%d]: %s\n", i, tree_node->left->value[0]);
+    printf("    type: %d\n", tree_node->left->type);
+    printf("    num_tokens: %i\n", tree_node->left->num_tokens);
+    
+    
+    printf("*Right Child*\n");
+    printf("Node[%d]: %s\n", i, tree_node->right->value[0]);
+    printf("    type: %d\n", tree_node->right->type);
+    printf("    num_tokens: %i\n", tree_node->right->num_tokens);
+    
 }
+
+
 
 int main()
 {
@@ -140,6 +152,7 @@ int main()
     }
 
     tree_node = create_tree(token_list);
+    printf("***Binary Tree***\n");
     print_tree(tree_node);
 
     return 0;

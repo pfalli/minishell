@@ -34,15 +34,6 @@ Assume a pipeline command like:
 
 echo arg1 | grep arg2 > output.txt
 
-!Token List
-
-
-token_list
-+------------+      +------------+      +------------+      +------------+      +------------+      +------------+      +------------+
-| token_type |----> | TOKEN_WORD |      | TOKEN_WORD |      | TOKEN_PIPE |      | TOKEN_WORD |      | TOKEN_WORD |      | TOKEN_REDIR|      | TOKEN_WORD |
-| value      |----> | "echo"     |----> | "arg1"     |----> | "|"        |----> | "grep"     |----> | "arg2"     |----> | ">"        |----> | "output.txt" |
-| next       |----> | next       |----> | next       |----> | next       |----> | next       |----> | next       |----> | next       |----> | NULL        |
-+------------+      +------------+      +------------+      +------------+      +------------+      +------------+      +------------+
 
 !Resulting AST Structure
 

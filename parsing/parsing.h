@@ -37,12 +37,11 @@
 
 typedef enum s_type
 {
-    END = 0,
-    ERROR,
+    WORD = 0,
     PIPE,
     REDIRECTION,
-    WORD, // command or argument
-    SIMPLE_CMD,
+    ERROR,
+    SIMPLE_CMD, // command or argument
     BUILTIN_CMD,
     ARGUMENT,
     FILE_EOF
@@ -77,7 +76,7 @@ typedef struct s_token
 typedef enum s_tree_node_type
 {
     TREE_CMD = 0,
-    TREE_PIPE
+    TREE_PIPE = 1
 }                                   t_tree_node_type;
 
 typedef struct s_tree
@@ -110,5 +109,6 @@ t_tree *create_tree(t_token *token_list);
 t_tree *create_tree_node(t_token *token_list, int num_tokens);
 int count_tokens_list(t_token *token_list);
 void print_tree(t_tree* node);
+t_tree	*malloc_node(int num_tokens);
 
 #endif

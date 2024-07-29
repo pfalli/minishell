@@ -28,12 +28,25 @@ int count_tokens_list(t_token *token_list)
     return(count);
 }
 
+t_tree	*malloc_node(int num_tokens)
+{
+	t_tree	*node;
+
+	node = malloc(sizeof(t_tree));
+	if (!node)
+		return (NULL);
+	node->left = NULL;
+	node->right = NULL;
+	node->value = calloc(num_tokens + 1, sizeof(char **));
+	return (node);
+}
+
 t_tree *create_tree_node(t_token *token_list, int num_tokens)
 {
     t_tree *node;
     int index = 0;
 
-    node = malloc(num_tokens);
+    node = malloc_node(num_tokens);
     node->type = TREE_CMD;
     if (token_list->type == PIPE)
         node->type = TREE_PIPE;
@@ -52,9 +65,9 @@ t_tree *create_tree_node(t_token *token_list, int num_tokens)
 
 t_tree *create_tree(t_token *token_list)
 {
-    t_tree *new_node;
+    t_tree *new_node = NULL;
     t_tree *tree_node = NULL;
-    int num_tokens;
+    int num_tokens = 0;
 
     while (token_list != NULL)
     {
