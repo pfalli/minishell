@@ -99,35 +99,30 @@ void	ft_free_token_list(t_token *token_list)
 	return ;
 }
 
-// Recursive function to print the tree
-void print_tree(t_tree* tree_node) // I was't allocating properly the tree_node in create_tree_node
+void print_tree(t_tree* tree_node, int depth, const char* prefix)
 {
-    int i = 0;
-
     if (tree_node == NULL)
         return;
-    while (i < tree_node->num_tokens)
+    printf("%*s%s", depth * 4, "", prefix);
+    if (tree_node->num_tokens > 0)
     {
-        printf("Node[%d]: %s\n", i, tree_node->value[i]);
-        printf("    type: %d\n", tree_node->type);
-        printf("    num_tokens: %i\n", tree_node->num_tokens);
-        i++;
+        printf("[");
+        for (int i = 0; i < tree_node->num_tokens; i++)
+        {
+            printf("%s", tree_node->value[i]);
+            if (i < tree_node->num_tokens - 1)
+                printf(", ");
+        }
+        printf("]");
     }
-    
-
-    printf("*Left Child*\n");
-    printf("Node[%d]: %s\n", i, tree_node->left->value[0]);
-    printf("    type: %d\n", tree_node->left->type);
-    printf("    num_tokens: %i\n", tree_node->left->num_tokens);
-    
-    
-    printf("*Right Child*\n");
-    printf("Node[%d]: %s\n", i, tree_node->right->value[0]);
-    printf("    type: %d\n", tree_node->right->type);
-    printf("    num_tokens: %i\n", tree_node->right->num_tokens);
-    
+    else
+        printf("%d", tree_node->type);
+    printf("\n");
+    if (tree_node->left != NULL)
+        print_tree(tree_node->left, depth + 1, "├── Left: ");
+    if (tree_node->right != NULL)
+        print_tree(tree_node->right, depth + 1, "└── Right: ");
 }
-
 
 
 int main()
@@ -152,8 +147,8 @@ int main()
     }
 
     tree_node = create_tree(token_list);
-    printf("***Binary Tree***\n");
-    print_tree(tree_node);
+    printf("\n***Binary Tree***\n");
+    print_tree(tree_node, 0, "root");
 
     return 0;
 }

@@ -108,7 +108,7 @@ void	ft_free_token_list(t_token *token_list);
 t_tree *create_tree(t_token *token_list);
 t_tree *create_tree_node(t_token *token_list, int num_tokens);
 int count_tokens_list(t_token *token_list);
-void print_tree(t_tree* node);
+void print_tree(t_tree* tree_node, int depth, const char* prefix);
 t_tree	*malloc_node(int num_tokens);
 
 #endif
