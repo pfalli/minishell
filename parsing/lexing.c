@@ -124,6 +124,7 @@ void print_tree(t_tree* tree_node, int depth, const char* prefix)
         print_tree(tree_node->right, depth + 1, "└── Right: ");
 }
 
+extern char **environ;
 
 int main()
 {
@@ -150,5 +151,9 @@ int main()
     printf("\n***Binary Tree***\n");
     print_tree(tree_node, 0, "root");
 
+    char **args = tree_node->value;
+    char *path = "/bin/ls";
+    if (execve(path, args, environ) == -1)
+        perror("execve");
     return 0;
 }
