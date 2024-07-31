@@ -15,4 +15,4 @@ fclean:
 
 valgrind --leak-check=full
 
-gcc -g -Wall -Wextra -Werror lexing.c prompt.c init_tree.c -lreadline
+gcc -g -Wall -Wextra -Werror parsing.c prompt.c utils.c -lreadline

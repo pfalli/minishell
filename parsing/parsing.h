@@ -40,7 +40,6 @@ typedef enum s_type
     WORD = 0,
     PIPE,
     REDIRECTION,
-    ERROR,
     SIMPLE_CMD, // command or argument
     BUILTIN_CMD,
     ARGUMENT,
@@ -61,32 +60,20 @@ typedef struct s_prompt
     
 }                                   t_prompt;
 
+
 typedef struct s_token
 {
 	t_type	type;
     char *value;
+    char **multi_array_command;
+    char **multi_array_files;
     struct s_token *next;
     struct s_token *prev;
-    int token_count;
+    int cmd_count;
+    int file_count;
+    int word_count;
 }									t_token;
 
-
-// *** TREE STRUCT ***
-
-typedef enum s_tree_node_type
-{
-    TREE_CMD = 0,
-    TREE_PIPE = 1
-}                                   t_tree_node_type;
-
-typedef struct s_tree
-{
-    t_tree_node_type type;
-    char **value;
-    struct s_tree *left;
-    struct s_tree *right;
-    int num_tokens;
-}                                   t_tree;
 
 
 
@@ -98,17 +85,18 @@ t_token *parsing(t_token *tokens, t_prompt *prompt);
 void init_prompt(t_prompt *prompt);
 t_token *create_linked_list(t_prompt *prompt);
 t_token *create_token(char *word);
-t_token init_token(char *word);
 t_type search_token_type(char *word);
-void add_node_to_list(t_token **head, t_token **current, t_token *new_node);
-t_token init_word(t_prompt *prompt);
-char *ft_strtok(char *str, const char *delim);
 void	ft_free_token_list(t_token *token_list);
+void append_node(t_token **head, t_token **current, t_token *new);
 
-t_tree *create_tree(t_token *token_list);
-t_tree *create_tree_node(t_token *token_list, int num_tokens);
-int count_tokens_list(t_token *token_list);
-void print_tree(t_tree* tree_node, int depth, const char* prefix);
-t_tree	*malloc_node(int num_tokens);
+t_token *init_multi_arrays(t_token *new, t_prompt *prompt);
+bool initialize_multi_arrays(t_token *new, char *value_copy);
+int count_word(const char *str);
+char **ft_split(const char *str, char delimiter);
+char *ft_strtok(char *str, const char *delim);
+char *ft_strtok_copy(char *str, const char *delim);
+size_t ft_strspn(const char *str, const char *accept);
+size_t ft_strcspn(const char *str, const char *reject);
+size_t ft_strlen_pipe(const char *str);
 
 #endif
