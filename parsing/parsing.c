@@ -42,13 +42,13 @@ t_token *init_multi_arrays(t_token *new, t_prompt *prompt)
     return new;
 }
 
-t_token *create_linked_list(t_prompt *prompt) // a token is everything between the PIPE |
+t_token *create_linked_list(t_prompt *prompt, char *message) // a token is everything between the PIPE |
 {
     t_token *head = NULL;
     t_token *new = NULL;
     t_token *current = NULL;
-    char *save_prompt_message = strdup(prompt->message);
-    char *token = ft_strtok(save_prompt_message, "|"); //
+    char *save_prompt_message = strdup(message);
+    char *token = ft_strtok(save_prompt_message, "|");
     
     while(token != NULL)
     {
@@ -123,20 +123,6 @@ t_type search_token_type(char *word)
     return(type);
 }
 
-void	ft_free_token_list(t_token *token_list)
-{
-	t_token	*token_list_holder;
-
-	if (!token_list)
-		return ;
-	while (token_list)
-	{
-		free(token_list->value);
-		token_list_holder = token_list;
-		token_list = token_list->next;
-		free(token_list_holder);
-	}
-}
 
 bool initialize_multi_arrays(t_token *new, char *value_copy)
 {
@@ -152,46 +138,41 @@ bool initialize_multi_arrays(t_token *new, char *value_copy)
     return true;
 }
 
+void minishell_loop(t_prompt *prompt, t_token **token_list)
+{
+    char *message;
+
+    while (1)
+    {
+        message = readline(RED "MINISHELL$$ " RESET);
+        if (strlen(message) == 0)
+        {
+            free(message);
+            return ;
+        }
+        if(message)
+            add_history(message);
+        *token_list = create_linked_list(prompt, message);
+        print_token_details(*token_list);
+        if (message)
+			free(message);
+    }
+    free_readline();
+}
+
+
 int main()
 {
     t_prompt prompt;
-    t_token *token_list;
-    t_token *current_token;
-    int i = 0;
-    int j;
+    t_token *token_list = NULL;
 
     init_prompt(&prompt);
 
-    token_list = create_linked_list(&prompt);
+    minishell_loop(&prompt, &token_list);
 
-    current_token = token_list;
-    if(current_token == NULL)
-        return(printf("error linklist NULL\n"));
-    while (current_token != NULL)
-    {
-        printf("Token_value[%i]: %s\n", i, current_token->value);
-    
-        if (current_token->multi_array_command == NULL)
-            printf("ERROR MULTI COMMAND\n");
-        printf("  Commands:\n");
-        j = 0;
-        while (j < current_token->cmd_count)
-        {
-            printf("    Command[%d]: %s\n", j, current_token->multi_array_command[j]);
-            j++;
-        }
-        if (current_token->multi_array_files == NULL)
-            printf("ERROR MULTI FILE\n");
-        printf("  Files:\n");
-        j = 0;
-        while (j < current_token->file_count)
-        {
-            printf("    File[%d]: %s\n", j, current_token->multi_array_files[j]);
-            j++;
-        }
-        current_token = current_token->next;
-        i++;
-    }
     printf("prompt->message: %s\n", prompt.message);
+    ft_free_token_list(token_list);
+    free_prompt(&prompt);
+    free_readline();
     return 0;
 }

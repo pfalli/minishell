@@ -79,18 +79,25 @@ typedef struct s_token
 
 // **************************************************************
 
+void minishell_loop(t_prompt *prompt, t_token **token_list);
+
 void parser(t_prompt *prompt);
 t_token *lexing(t_prompt *prompt);
 t_token *parsing(t_token *tokens, t_prompt *prompt);
 void init_prompt(t_prompt *prompt);
-t_token *create_linked_list(t_prompt *prompt);
+t_token *create_linked_list(t_prompt *prompt, char *message);
 t_token *create_token(char *word);
 t_type search_token_type(char *word);
-void	ft_free_token_list(t_token *token_list);
 void append_node(t_token **head, t_token **current, t_token *new);
+
+void print_token_details(t_token *token_list);
+
+// ** init ** //
 
 t_token *init_multi_arrays(t_token *new, t_prompt *prompt);
 bool initialize_multi_arrays(t_token *new, char *value_copy);
+
+// ** utils ** //
 int count_word(const char *str);
 char **ft_split(const char *str, char delimiter);
 char *ft_strtok(char *str, const char *delim);
@@ -98,5 +105,12 @@ char *ft_strtok_copy(char *str, const char *delim);
 size_t ft_strspn(const char *str, const char *accept);
 size_t ft_strcspn(const char *str, const char *reject);
 size_t ft_strlen_pipe(const char *str);
+
+// ** free ** //
+void free_prompt(t_prompt *prompt);
+void	ft_free_token_list(t_token *token_list);
+void free_multi_arrays(t_token *token_list);
+void	free_multi_arr(char **arr);
+void free_readline();
 
 #endif

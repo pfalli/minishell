@@ -163,3 +163,36 @@ char **ft_split(const char *str, char delimiter)
 
     return result;
 }
+
+void print_token_details(t_token *token_list)
+{
+    int i = 0;
+    int j;
+
+    t_token *current_token = token_list;
+    while (current_token != NULL)
+    {
+        printf("Token_value[%i]: %s\n", i, current_token->value);
+
+        if (current_token->multi_array_command == NULL)
+            printf("ERROR MULTI COMMAND\n");
+        printf("  Commands:\n");
+        j = 0;
+        while (j < current_token->cmd_count)
+        {
+            printf("    Command[%d]: %s\n", j, current_token->multi_array_command[j]);
+            j++;
+        }
+        if (current_token->multi_array_files == NULL)
+            printf("ERROR MULTI FILE\n");
+        printf("  Files:\n");
+        j = 0;
+        while (j < current_token->file_count)
+        {
+            printf("    File[%d]: %s\n", j, current_token->multi_array_files[j]);
+            j++;
+        }
+        current_token = current_token->next;
+        i++;
+    }
+}

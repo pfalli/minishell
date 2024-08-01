@@ -15,4 +15,6 @@ fclean:
 
 valgrind --leak-check=full
 
+valgrind --leak-check=full --show-leak-kinds=all
+
 gcc -g -Wall -Wextra -Werror parsing.c prompt.c utils.c -lreadline

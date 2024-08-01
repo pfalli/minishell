@@ -15,7 +15,7 @@
 void init_prompt(t_prompt *prompt)
 {
     memset(prompt, 0, sizeof(t_prompt));
-    prompt->message = readline(RED "MINISHELL$$ " RESET);
+    prompt->message = 
     prompt->curr_dir = getcwd(NULL, 0);
     prompt->symbols = "<>|";
     prompt->whitespace = "\t\r\v ";
