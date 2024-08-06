@@ -60,19 +60,19 @@ typedef struct s_prompt
     
 }                                   t_prompt;
 
-//  typedef struct s_red_token
-//  {
-//      char *value;
-//      t_type type;
-//      struct s_red_token *next;
-//  }                                   t_red_token;
-//  
-//  typedef struct s_cmd_token
-//  {
-//      char *value;
-//      t_type type;
-//      struct s_cmd_token *next;
-//  }                                   t_cmd_token;
+typedef struct s_redirection
+{
+    char *value;
+    t_type type;
+    struct s_redirection *next;
+}                                   t_redirection;
+
+typedef struct s_command
+{
+    char *value;
+    t_type type;
+    struct s_command *next;
+}                                   t_command;
 
 typedef struct s_token
 {
@@ -84,8 +84,6 @@ typedef struct s_token
     int cmd_count;
     int file_count;
     int word_count;
-    struct s_token *red_token;
-    struct s_token *cmd_token;
 }									t_token;
 
 
@@ -126,5 +124,16 @@ void	ft_free_token_list(t_token *token_list);
 void free_multi_arrays(t_token *token_list);
 void	free_multi_arr(char **arr);
 void free_readline();
+
+// ** redirection**// 
+t_redirection *create_redirection_list(char *file_name);
+void append_redirection_node(t_redirection **head, t_redirection **current, t_redirection *new_node);
+t_redirection *create_redirection_node(char *file_name);
+
+// **cmd**//
+t_command *create_command_node(char *command);
+void append_command_node(t_command **head, t_command **current, t_command *new_node);
+t_command *create_command_list(char *command);
+
 
 #endif

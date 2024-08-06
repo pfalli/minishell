@@ -12,8 +12,6 @@
 
 #include "parsing.h"
 
-//void create_red_cmd()
-
 t_token *init_multi_arrays(t_token *new, t_prompt *prompt)
 {
     char *value_copy = strdup(new->value);
@@ -44,6 +42,34 @@ t_token *init_multi_arrays(t_token *new, t_prompt *prompt)
     return new;
 }
 
+void *create_redir_cmd(t_token *new, t_prompt *prompt)
+{
+    char *value_copy = strdup(new->value);
+    char *word;
+    bool redirection = false;
+
+    if (!value_copy)
+        return NULL;
+    word = ft_strtok_copy(value_copy, prompt->whitespace);
+    while (word != NULL)
+    {
+        if (strcmp(word, prompt->symbols) == 0)
+            redirection = true;
+        else if (redirection)
+        {
+            create_redirection_list(word);
+            redirection = false;
+        }
+        else
+            create_command_list(word);
+        word = ft_strtok_copy(NULL, prompt->whitespace);
+    }
+    new->multi_array_command[new->cmd_count] = NULL;
+    new->multi_array_files[new->file_count] = NULL;
+    free(value_copy);
+    return ;
+}
+
 t_token *create_linked_list(t_prompt *prompt, char *message) // a token is everything between the PIPE |
 {
     t_token *head = NULL;
@@ -51,6 +77,7 @@ t_token *create_linked_list(t_prompt *prompt, char *message) // a token is every
     t_token *current = NULL;
     char *save_prompt_message = strdup(message);
     char *token = ft_strtok(save_prompt_message, "|");
+    int i = 0;
     
     while(token != NULL)
     {
@@ -62,8 +89,8 @@ t_token *create_linked_list(t_prompt *prompt, char *message) // a token is every
         }
         append_node(&head, &current, new);
         init_multi_arrays(new, prompt);
-        //create_command_list(new)
         token = ft_strtok(NULL, "|");
+        i++;
     }
     free(save_prompt_message);
     return(head);
@@ -141,7 +168,7 @@ bool initialize_multi_arrays(t_token *new, char *value_copy)
     return true;
 }
 
-void minishell_loop(t_prompt *prompt, t_token **token_list)
+void minishell_loop(t_prompt *prompt, t_token **token_list, t_redirection **redir)
 {
     char *message;
 
@@ -157,10 +184,13 @@ void minishell_loop(t_prompt *prompt, t_token **token_list)
             add_history(message);
         *token_list = create_linked_list(prompt, message);
         print_token_details(*token_list);
+        //*redir = create_redirection_list()
+
         if (message)
 			free(message);
     }
     free_readline();
+    clear_history();
 }
 
 

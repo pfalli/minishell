@@ -12,10 +12,10 @@
 
 #include "parsing.h"
 
-t_token *create_command_node(char *command)
+t_command *create_command_node(char *command)
 {
     int length = strlen(command);
-    t_token *new_node = malloc(sizeof(t_command_token));
+    t_command *new_node = malloc(sizeof(t_command));
     if (new_node == NULL)
         return NULL;
     new_node->command = (char *)malloc(sizeof(char) * (length + 1));
@@ -30,7 +30,7 @@ t_token *create_command_node(char *command)
     return new_node;
 }
 
-void append_command_node(t_token **head, t_token **current, t_token *new_node)
+void append_command_node(t_command **head, t_command **current, t_command *new_node)
 {
     if (*head == NULL)
     {
@@ -44,20 +44,20 @@ void append_command_node(t_token **head, t_token **current, t_token *new_node)
     }
 }
 
-t_token *create_command_list(char *command)
+t_command *create_command_list(char *command)
 {
-    t_token *head = NULL;
-    t_token *current = NULL;
+    t_command *head = NULL;
+    t_command *current = NULL;
     int i = 0;
 
     while (command)
     {
-        t_token *new_node = create_command_node(command);
+        t_command *new_node = create_command_node(command);
         if (new_node == NULL)
         {
             while (head != NULL) // create a free_function for freeing at the end
             {
-                t_token *temp = head;
+                t_command *temp = head;
                 head = head->next;
                 free(temp->command);
                 free(temp);
@@ -71,11 +71,11 @@ t_token *create_command_list(char *command)
     return head;
 }
 
-void free_command_list(t_token *head)
+void free_command_list(t_command *head)
 {
     while (head != NULL)
     {
-        t_token *temp = head;
+        t_command *temp = head;
         head = head->next;
         free(temp->command);
         free(temp);
