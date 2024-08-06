@@ -12,6 +12,8 @@
 
 #include "parsing.h"
 
+//void create_red_cmd()
+
 t_token *init_multi_arrays(t_token *new, t_prompt *prompt)
 {
     char *value_copy = strdup(new->value);
@@ -60,6 +62,7 @@ t_token *create_linked_list(t_prompt *prompt, char *message) // a token is every
         }
         append_node(&head, &current, new);
         init_multi_arrays(new, prompt);
+        //create_command_list(new)
         token = ft_strtok(NULL, "|");
     }
     free(save_prompt_message);
@@ -101,12 +104,12 @@ t_token *create_token(char *word)
 		new_token->value[i] = word[i];
 		i++;
 	}
-    new_token->value[i] = 0; // ft_init_token
+    new_token->value[i] = 0;
     new_token->next = NULL;
     new_token->prev = NULL;
-    new_token->type = search_token_type(word);
     new_token->file_count = 0;
     new_token->cmd_count = 0;
+    //  new_token->cmd_token = create_token()
     return(new_token);
 }
 

@@ -60,10 +60,22 @@ typedef struct s_prompt
     
 }                                   t_prompt;
 
+//  typedef struct s_red_token
+//  {
+//      char *value;
+//      t_type type;
+//      struct s_red_token *next;
+//  }                                   t_red_token;
+//  
+//  typedef struct s_cmd_token
+//  {
+//      char *value;
+//      t_type type;
+//      struct s_cmd_token *next;
+//  }                                   t_cmd_token;
 
 typedef struct s_token
 {
-	t_type	type;
     char *value;
     char **multi_array_command;
     char **multi_array_files;
@@ -72,6 +84,8 @@ typedef struct s_token
     int cmd_count;
     int file_count;
     int word_count;
+    struct s_token *red_token;
+    struct s_token *cmd_token;
 }									t_token;
 
 
