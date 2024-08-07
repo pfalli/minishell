@@ -12,7 +12,7 @@
 
 #include "parsing.h"
 
-// Function to check if a character is a quote
+
 bool is_quote(char c)
 {
     return c == '"' || c == '\'';
@@ -161,41 +161,7 @@ int count_word(const char *str)
     return count;
 }
 
-char **ft_split(const char *str, char delimiter)
-{
-    size_t count = 0;
-    const char *temp = str;
-    while (*temp)
-    {
-        if (*temp == delimiter)
-            count++;
-        temp++;
-    }
 
-    char **result = malloc((count + 2) * sizeof(char *));
-    if (!result)
-        return NULL;
-
-    size_t idx = 0;
-    const char *start = str;
-    while (*str)
-    {
-        if (*str == delimiter)
-        {
-            size_t len = str - start;
-            result[idx] = malloc(len + 1);
-            strncpy(result[idx], start, len);
-            result[idx][len] = '\0';
-            idx++;
-            start = str + 1;
-        }
-        str++;
-    }
-    result[idx] = strdup(start);
-    result[idx + 1] = NULL;
-
-    return result;
-}
 
 void print_token_details(t_token *token_list)
 {

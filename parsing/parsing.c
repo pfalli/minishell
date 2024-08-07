@@ -70,31 +70,6 @@ t_token *init_multi_arrays(t_token *new, t_prompt *prompt)
 //      return new;
 //  }
 
-//  t_token *create_linked_list(t_prompt *prompt, char *message) // a token is everything between the PIPE |
-//  {
-//      t_token *head = NULL;
-//      t_token *new = NULL;
-//      t_token *current = NULL;
-//      char *save_prompt_message = strdup(message);
-//      char *token = ft_strtok(save_prompt_message, "|");
-//      int i = 0;
-//      
-//      while(token != NULL)
-//      {
-//          new = create_token(token);
-//          if (new == NULL)
-//          {
-//              ft_free_token_list(new);
-//              return NULL;
-//          }
-//          append_node(&head, &current, new);
-//          init_multi_arrays(new, prompt);
-//          token = ft_strtok(NULL, "|");
-//          i++;
-//      }
-//      free(save_prompt_message);
-//      return(head);
-//  }
 
 t_token *create_linked_list(t_prompt *prompt, char *message) // a token is everything between the PIPE |
 {
@@ -154,7 +129,7 @@ t_token *create_token(char *word)
 		free(new_token);
 		return (NULL);
 	}
-    while (i < length) // copy
+    while (i < length)
 	{
 		new_token->value[i] = word[i];
 		i++;
@@ -163,7 +138,6 @@ t_token *create_token(char *word)
     new_token->next = NULL;
     new_token->file_count = 0;
     new_token->cmd_count = 0;
-    //  new_token->cmd_token = create_token()
     return(new_token);
 }
 

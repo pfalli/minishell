@@ -19,15 +19,7 @@ void init_prompt(t_prompt *prompt)
     prompt->curr_dir = getcwd(NULL, 0);
     prompt->symbols = "<>";
     prompt->whitespace = "\t\r\v ";
-    prompt->quotes = "\'\"";
-    prompt->off_symbols = "!@#$%^&*-+=()[]{}\\|:;,<>/?.";
+    // prompt->quotes = "\'\"";
+    // prompt->off_symbols = "!@#$%^&*-+=()[]{}\\|:;,<>/?.";
     
-
-    //  // Debug
-    //  printf("Prompt message: %s\n", prompt->message);
-    //  printf("Current directory: %s\n", prompt->curr_dir);
-    //  printf("Symbols: %s\n", prompt->symbols);
-    //  printf("Whitespace: %s\n", prompt->whitespace);
-    //  printf("Quotes: %s\n", prompt->quotes);
-    //  printf("Off symbols: %s\n", prompt->off_symbols);
 }

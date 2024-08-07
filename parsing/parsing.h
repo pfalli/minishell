@@ -69,12 +69,6 @@ typedef struct s_redirection
     struct s_redirection *next;
 }                                   t_redirection;
 
-typedef struct s_command
-{
-    char *value;
-    t_type type;
-    struct s_command *next;
-}                                   t_command;
 
 typedef struct s_token
 {
