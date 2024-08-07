@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   redirection_list.c                                 :+:      :+:    :+:   */
+/*   redirection_token.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pfalli <pfalli@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/02 10:48:12 by pfalli            #+#    #+#             */
-/*   Updated: 2024/08/02 10:48:12 by pfalli           ###   ########.fr       */
+/*   Updated: 2024/08/07 13:58:53 by pfalli           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing.h"
 
-t_redirection *create_redirection_node(char *file_name)
+t_redirection *create_redirection_node(char *file_name, t_type type)
 {
     t_redirection *new_node = malloc(sizeof(t_redirection));
     if (new_node == NULL)
@@ -23,8 +23,9 @@ t_redirection *create_redirection_node(char *file_name)
         free(new_node);
         return NULL;
     }
-    // **calculate redirection_type**
+    new_node->type = type;
     new_node->next = NULL;
+    
     return new_node;
 }
 
@@ -42,29 +43,59 @@ void append_redirection_node(t_redirection **head, t_redirection **current, t_re
     }
 }
 
-t_redirection *create_redirection_list(char *file_name)
+t_redirection *create_redirection_list(t_token *new, t_prompt *prompt, char *message)
 {
-    t_redirection *head = NULL;
-    t_redirection *current = NULL;
-    int i = 0;
-
-    while (file_name)
+    t_redirection *redir_head = NULL;
+    t_redirection *redir_current = NULL;
+    char *word = ft_strtok_copy(message, prompt->whitespace);
+    bool redirection = false;
+    t_type type;
+    
+    while (word != NULL)
     {
-        t_redirection *new_node = create_redirection_node(file_name);
-        if (new_node == NULL)
+        if (strcmp(word, ">") == 0 || strcmp(word, "<") == 0 || strcmp(word, ">>") == 0 || strcmp(word, "<<") == 0 )
         {
-            while (head != NULL)// create a free_function for freeing at the end
-            {
-                t_redirection *temp = head;
-                head = head->next;
-                free(temp->file_name);
-                free(temp);
-            }
-            return NULL;
+            redirection = true;
+            type = search_type(word);
         }
-        append_redirection_node(&head, &current, new_node);
-        i++;
+        else if (redirection)
+        {
+            t_redirection *new_redir = create_redirection_node(word, type);
+            append_redirection_node(&redir_head, &redir_current, new_redir);
+            redirection = false;
+        }
+        word = ft_strtok_copy(NULL, prompt->whitespace);
     }
-
-    return head;
+    new->redirection = redir_head;
+    return redir_head;
 }
+
+t_type search_type(char *word)
+{
+    t_type type;
+
+    if(strcmp(word, "<") == 0)
+        type = REDIRECTION_IN;
+    else if(strcmp(word, ">")== 0)
+        type = REDIRECTION_OUT;
+    else if(strcmp(word, ">>")== 0)
+        type = APPEND;
+    else if(strcmp(word, "<<")== 0)
+        type = HEREDOC;
+    return(type);
+}
+
+//  char *if_redir(char *word)
+//  {
+//      char *type;
+//  
+//      if(strcmp(word, "<") == 0)
+//          type = "REDIRECTION_IN";
+//      else if(strcmp(word, ">")== 0)
+//          type = "REDIRECTION_OUT";
+//      else if(strcmp(word, ">>")== 0)
+//          type = "DOUBLE_REDIRECTION";
+//      else if(strcmp(word, "<<")== 0)
+//          type = "HEREDOC";
+//      return(type);
+//  }

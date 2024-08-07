@@ -174,24 +174,26 @@ void print_token_details(t_token *token_list)
     {
         printf("Token_value[%i]: %s\n", i, current_token->value);
 
-        if (current_token->multi_array_command == NULL)
+        if (current_token->multi_command == NULL)
             printf("ERROR MULTI COMMAND\n");
         printf("  Commands:\n");
         j = 0;
         while (j < current_token->cmd_count)
         {
-            printf("    Command[%d]: %s\n", j, current_token->multi_array_command[j]);
+            printf("    Command[%d]: %s\n", j, current_token->multi_command[j]);
             j++;
         }
-        if (current_token->multi_array_files == NULL)
+        if (current_token->multi_files == NULL)
             printf("ERROR MULTI FILE\n");
         printf("  Files:\n");
         j = 0;
         while (j < current_token->file_count)
         {
-            printf("    File[%d]: %s\n", j, current_token->multi_array_files[j]);
+            printf("    File[%d]: %s\n", j, current_token->multi_files[j]);
             j++;
         }
+        printf(" *** redirection_list***\n");
+        print_redirection_list(current_token->redirection);
         current_token = current_token->next;
         i++;
     }

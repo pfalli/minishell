@@ -25,50 +25,76 @@ t_token *init_multi_arrays(t_token *new, t_prompt *prompt)
     word = ft_strtok_copy(value_copy, prompt->whitespace);
     while (word != NULL)
     {
-        if (strcmp(word, ">") == 0)
+        if (strcmp(word, ">") == 0 || strcmp(word, "<") == 0 || strcmp(word, ">>") == 0 || strcmp(word, "<<") == 0 )
             redirection = true;
         else if (redirection)
         {
-            new->multi_array_files[new->file_count++] = strdup(word);
+            new->multi_files[new->file_count++] = strdup(word);
             redirection = false;
         }
         else
-            new->multi_array_command[new->cmd_count++] = strdup(word);
+            new->multi_command[new->cmd_count++] = strdup(word);
         word = ft_strtok_copy(NULL, " ");
     }
-    new->multi_array_command[new->cmd_count] = NULL;
-    new->multi_array_files[new->file_count] = NULL;
+    new->multi_command[new->cmd_count] = NULL;
+    new->multi_files[new->file_count] = NULL;
     free(value_copy);
     return new;
 }
 
-void *create_redir_cmd(t_token *new, t_prompt *prompt)
-{
-    char *value_copy = strdup(new->value);
-    char *word;
-    bool redirection = false;
+//  t_token *create_redir_cmd(t_token *new, t_prompt *prompt)
+//  {
+//      char *value_copy = strdup(new->value);
+//      char *word;
+//      bool redirection = false;//   
 
-    if (!value_copy)
-        return NULL;
-    word = ft_strtok_copy(value_copy, prompt->whitespace);
-    while (word != NULL)
-    {
-        if (strcmp(word, prompt->symbols) == 0)
-            redirection = true;
-        else if (redirection)
-        {
-            create_redirection_list(word);
-            redirection = false;
-        }
-        else
-            create_command_list(word);
-        word = ft_strtok_copy(NULL, prompt->whitespace);
-    }
-    new->multi_array_command[new->cmd_count] = NULL;
-    new->multi_array_files[new->file_count] = NULL;
-    free(value_copy);
-    return ;
-}
+//      if (!value_copy)
+//          return NULL;
+//      word = ft_strtok_copy(value_copy, prompt->whitespace);
+//      while (word != NULL)
+//      {
+//          if (strcmp(word, prompt->symbols) == 0)
+//              redirection = true;
+//          else if (redirection)
+//          {
+//              create_redirection_list(word);
+//              redirection = false;
+//          }
+//          else
+//              create_command_list(word);
+//          word = ft_strtok_copy(NULL, prompt->whitespace);
+//      }
+//      new->multi_array_command[new->cmd_count] = NULL;
+//      new->multi_array_files[new->file_count] = NULL;
+//      free(value_copy);
+//      return new;
+//  }
+
+//  t_token *create_linked_list(t_prompt *prompt, char *message) // a token is everything between the PIPE |
+//  {
+//      t_token *head = NULL;
+//      t_token *new = NULL;
+//      t_token *current = NULL;
+//      char *save_prompt_message = strdup(message);
+//      char *token = ft_strtok(save_prompt_message, "|");
+//      int i = 0;
+//      
+//      while(token != NULL)
+//      {
+//          new = create_token(token);
+//          if (new == NULL)
+//          {
+//              ft_free_token_list(new);
+//              return NULL;
+//          }
+//          append_node(&head, &current, new);
+//          init_multi_arrays(new, prompt);
+//          token = ft_strtok(NULL, "|");
+//          i++;
+//      }
+//      free(save_prompt_message);
+//      return(head);
+//  }
 
 t_token *create_linked_list(t_prompt *prompt, char *message) // a token is everything between the PIPE |
 {
@@ -89,6 +115,9 @@ t_token *create_linked_list(t_prompt *prompt, char *message) // a token is every
         }
         append_node(&head, &current, new);
         init_multi_arrays(new, prompt);
+
+        create_redirection_list(new, prompt, token);
+
         token = ft_strtok(NULL, "|");
         i++;
     }
@@ -106,7 +135,6 @@ void append_node(t_token **head, t_token **current, t_token *new)
         else
         {
             (*current)->next = new;
-            new->prev = *current;
             *current = new;
         }
 }
@@ -133,34 +161,20 @@ t_token *create_token(char *word)
 	}
     new_token->value[i] = 0;
     new_token->next = NULL;
-    new_token->prev = NULL;
     new_token->file_count = 0;
     new_token->cmd_count = 0;
     //  new_token->cmd_token = create_token()
     return(new_token);
 }
 
-t_type search_token_type(char *word)
-{
-    t_type type;
-
-    if(strcmp(word, "|") == 0)
-        type = PIPE;
-    else if(strcmp(word, "<") == 0 || strcmp(word, ">") == 0)
-        type = REDIRECTION;
-    else
-        type = WORD;
-    return(type);
-}
-
 
 bool initialize_multi_arrays(t_token *new, char *value_copy)
 {
     new->word_count = count_word(new->value);
-    new->multi_array_command = malloc(sizeof(char *) * (new->word_count + 1));
-    new->multi_array_files = malloc(sizeof(char *) * (new->word_count + 1));
+    new->multi_command = malloc(sizeof(char *) * (new->word_count + 1));
+    new->multi_files = malloc(sizeof(char *) * (new->word_count + 1));
 
-    if (!new->multi_array_command || !new->multi_array_files)
+    if (!new->multi_command || !new->multi_files)
     {
         free(value_copy);
         return false;
@@ -168,7 +182,7 @@ bool initialize_multi_arrays(t_token *new, char *value_copy)
     return true;
 }
 
-void minishell_loop(t_prompt *prompt, t_token **token_list, t_redirection **redir)
+void minishell_loop(t_prompt *prompt, t_token **token_list)
 {
     char *message;
 
@@ -182,15 +196,27 @@ void minishell_loop(t_prompt *prompt, t_token **token_list, t_redirection **redi
         }
         if(message)
             add_history(message);
+            
+        // ** checker_lexing** doublequotes, singlequotes
+
         *token_list = create_linked_list(prompt, message);
         print_token_details(*token_list);
-        //*redir = create_redirection_list()
 
         if (message)
 			free(message);
     }
     free_readline();
     clear_history();
+}
+
+void print_redirection_list(t_redirection *redir_list)
+{
+    t_redirection *current = redir_list;
+    while (current != NULL)
+    {
+        printf("    File_name: %s, Type: %d\n", current->file_name, current->type);
+        current = current->next;
+    }
 }
 
 

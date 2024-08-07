@@ -37,9 +37,11 @@
 
 typedef enum s_type
 {
-    WORD = 0,
-    PIPE,
-    REDIRECTION,
+    START = 0,
+    REDIRECTION_IN,
+    REDIRECTION_OUT,
+    APPEND,
+    HEREDOC,
     SIMPLE_CMD, // command or argument
     BUILTIN_CMD,
     ARGUMENT,
@@ -62,7 +64,7 @@ typedef struct s_prompt
 
 typedef struct s_redirection
 {
-    char *value;
+    char *file_name;
     t_type type;
     struct s_redirection *next;
 }                                   t_redirection;
@@ -77,13 +79,13 @@ typedef struct s_command
 typedef struct s_token
 {
     char *value;
-    char **multi_array_command;
-    char **multi_array_files;
+    char **multi_command;
+    char **multi_files;
     struct s_token *next;
-    struct s_token *prev;
     int cmd_count;
     int file_count;
     int word_count;
+    t_redirection *redirection;
 }									t_token;
 
 
@@ -99,10 +101,11 @@ t_token *parsing(t_token *tokens, t_prompt *prompt);
 void init_prompt(t_prompt *prompt);
 t_token *create_linked_list(t_prompt *prompt, char *message);
 t_token *create_token(char *word);
-t_type search_token_type(char *word);
+t_type search_type(char *word);
 void append_node(t_token **head, t_token **current, t_token *new);
 
 void print_token_details(t_token *token_list);
+void print_redirection_list(t_redirection *redir_list);
 
 // ** init ** //
 
@@ -126,9 +129,9 @@ void	free_multi_arr(char **arr);
 void free_readline();
 
 // ** redirection**// 
-t_redirection *create_redirection_list(char *file_name);
+t_redirection *create_redirection_list(t_token *new, t_prompt *prompt, char *word);
 void append_redirection_node(t_redirection **head, t_redirection **current, t_redirection *new_node);
-t_redirection *create_redirection_node(char *file_name);
+t_redirection *create_redirection_node(char *file_name, t_type type);
 
 // **cmd**//
 t_command *create_command_node(char *command);
