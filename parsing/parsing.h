@@ -120,6 +120,9 @@ char *ft_strtok_copy(char *str, const char *delim);
 size_t ft_strspn(const char *str, const char *accept);
 size_t ft_strcspn(const char *str, const char *reject);
 size_t ft_strlen_pipe(const char *str);
+bool is_quote(char c);
+char *find_token_end(char *str, const char *delim);
+const char *type_to_string(enum s_type type);
 
 // ** free ** //
 void free_prompt(t_prompt *prompt);

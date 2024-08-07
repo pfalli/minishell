@@ -12,6 +12,38 @@
 
 #include "parsing.h"
 
+// Function to check if a character is a quote
+bool is_quote(char c)
+{
+    return c == '"' || c == '\'';
+}
+
+char *find_token_end(char *str, const char *delim)
+{
+    char *end = str;
+    bool in_quote = false;
+    char quote_char = '\0';
+
+    while (*end)
+    {
+        if (is_quote(*end))
+        {
+            if (in_quote && *end == quote_char)
+                in_quote = false;
+            else if (!in_quote)
+            {
+                in_quote = true;
+                quote_char = *end;
+            }
+        }
+        else if (!in_quote && strchr(delim, *end))
+            break;
+        end++;
+    }
+
+    return end;
+}
+
 char *ft_strtok(char *str, const char *delim)
 {
     static char *last;
@@ -26,18 +58,19 @@ char *ft_strtok(char *str, const char *delim)
         return NULL;
 
     // Find the end of the token
-    char *end = str + ft_strcspn(str, delim);
+    char *end = find_token_end(str, delim);
+
     if (*end == '\0')
-    {
         last = NULL;
-    }
     else
     {
         *end = '\0';
         last = end + 1;
     }
+
     return str;
 }
+
 
 char *ft_strtok_copy(char *str, const char *delim)
 {
@@ -53,16 +86,16 @@ char *ft_strtok_copy(char *str, const char *delim)
         return NULL;
 
     // Find the end of the token
-    char *end = str + ft_strcspn(str, delim);
+    char *end = find_token_end(str, delim);
+
     if (*end == '\0')
-    {
         last = NULL;
-    }
     else
     {
         *end = '\0';
         last = end + 1;
     }
+
     return str;
 }
 
@@ -196,5 +229,32 @@ void print_token_details(t_token *token_list)
         print_redirection_list(current_token->redirection);
         current_token = current_token->next;
         i++;
+    }
+}
+
+const char *type_to_string(enum s_type type)
+{
+    switch (type)
+    {
+    case START:
+        return "START";
+    case REDIRECTION_IN:
+        return "REDIRECTION_IN";
+    case REDIRECTION_OUT:
+        return "REDIRECTION_OUT";
+    case APPEND:
+        return "APPEND";
+    case HEREDOC:
+        return "HEREDOC";
+    case SIMPLE_CMD:
+        return "SIMPLE_CMD";
+    case BUILTIN_CMD:
+        return "BUILTIN_CMD";
+    case ARGUMENT:
+        return "ARGUMENT";
+    case FILE_EOF:
+        return "FILE_EOF";
+    default:
+        return "UNKNOWN";
     }
 }

@@ -196,7 +196,7 @@ void minishell_loop(t_prompt *prompt, t_token **token_list)
         }
         if(message)
             add_history(message);
-            
+
         // ** checker_lexing** doublequotes, singlequotes
 
         *token_list = create_linked_list(prompt, message);
@@ -214,7 +214,7 @@ void print_redirection_list(t_redirection *redir_list)
     t_redirection *current = redir_list;
     while (current != NULL)
     {
-        printf("    File_name: %s, Type: %d\n", current->file_name, current->type);
+        printf("    File_name: %s, Type: %s\n", current->file_name, type_to_string(current->type));
         current = current->next;
     }
 }
