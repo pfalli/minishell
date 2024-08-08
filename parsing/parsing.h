@@ -130,10 +130,5 @@ t_redirection *create_redirection_list(t_token *new, t_prompt *prompt, char *wor
 void append_redirection_node(t_redirection **head, t_redirection **current, t_redirection *new_node);
 t_redirection *create_redirection_node(char *file_name, t_type type);
 
-// **cmd**//
-t_command *create_command_node(char *command);
-void append_command_node(t_command **head, t_command **current, t_command *new_node);
-t_command *create_command_list(char *command);
-
 
 #endif

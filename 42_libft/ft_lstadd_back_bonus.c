@@ -1,26 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   signals.c                                          :+:      :+:    :+:   */
+/*   ft_lstadd_back_bonus.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pfalli <pfalli@student.42wolfsburg.de>     +#+  +:+       +#+        */
+/*   By: atamas <atamas@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/22 09:31:22 by pfalli            #+#    #+#             */
-/*   Updated: 2024/07/22 09:31:22 by pfalli           ###   ########.fr       */
+/*   Created: 2023/12/01 18:04:07 by atamas            #+#    #+#             */
+/*   Updated: 2023/12/01 18:33:30 by atamas           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "parsing.h"
+#include "libft.h"
 
-void sig_int (int signal)
+void	ft_lstadd_back(t_list **lst, t_list *new)
 {
-    (void)signal;
-    printf("\n");
-}
+	t_list	*lastone;
 
-void sig_quit(int signal)
-{
-    (void)signal;
-    printf("Quit\n");
-    //kill();
+	if (*lst)
+	{
+		lastone = ft_lstlast(*lst);
+		lastone->next = new;
+	}
+	else
+		*lst = new;
 }

@@ -1,26 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   signals.c                                          :+:      :+:    :+:   */
+/*   ft_tolower.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pfalli <pfalli@student.42wolfsburg.de>     +#+  +:+       +#+        */
+/*   By: atamas <atamas@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/22 09:31:22 by pfalli            #+#    #+#             */
-/*   Updated: 2024/07/22 09:31:22 by pfalli           ###   ########.fr       */
+/*   Created: 2023/11/13 15:28:20 by atamas            #+#    #+#             */
+/*   Updated: 2023/11/20 13:25:39 by atamas           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "parsing.h"
-
-void sig_int (int signal)
+int	ft_tolower(int c)
 {
-    (void)signal;
-    printf("\n");
+	if (c >= 'A' && c <= 'Z')
+		c += ' ';
+	return (c);
 }
 
-void sig_quit(int signal)
+/* #include <stdio.h>
+
+int	main(void)
 {
-    (void)signal;
-    printf("Quit\n");
-    //kill();
+	char ret = ft_tolower('A');
+	printf("%c", ret);
 }
+ */

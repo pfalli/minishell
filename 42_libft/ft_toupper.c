@@ -1,26 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   signals.c                                          :+:      :+:    :+:   */
+/*   ft_toupper.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pfalli <pfalli@student.42wolfsburg.de>     +#+  +:+       +#+        */
+/*   By: atamas <atamas@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/22 09:31:22 by pfalli            #+#    #+#             */
-/*   Updated: 2024/07/22 09:31:22 by pfalli           ###   ########.fr       */
+/*   Created: 2023/11/13 15:29:10 by atamas            #+#    #+#             */
+/*   Updated: 2023/11/13 15:29:13 by atamas           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "parsing.h"
-
-void sig_int (int signal)
+int	ft_toupper(int c)
 {
-    (void)signal;
-    printf("\n");
-}
-
-void sig_quit(int signal)
-{
-    (void)signal;
-    printf("Quit\n");
-    //kill();
+	if (c >= 'a' && c <= 'z')
+		c -= ' ';
+	return (c);
 }
