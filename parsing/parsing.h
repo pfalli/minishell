@@ -16,6 +16,7 @@
 #define RED "\x1b[31m"
 #define RESET "\x1b[0m"
 
+#include "../42_libft/libft.h"
 #include <stdbool.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -107,6 +108,7 @@ t_token *init_multi_arrays(t_token *new, t_prompt *prompt);
 bool initialize_multi_arrays(t_token *new, char *value_copy);
 
 // ** utils ** //
+char *check_dollar_sign( char *command);
 int count_word(const char *str);
 char **ft_split(const char *str, char delimiter);
 char *ft_strtok(char *str, const char *delim);
@@ -117,6 +119,8 @@ size_t ft_strlen_pipe(const char *str);
 bool is_quote(char c);
 char *find_token_end(char *str, const char *delim);
 const char *type_to_string(enum s_type type);
+void set_environment_variable(char *message);
+void *free_and_return_null(void *ptr);
 
 // ** free ** //
 void free_prompt(t_prompt *prompt);
@@ -129,6 +133,11 @@ void free_readline();
 t_redirection *create_redirection_list(t_token *new, t_prompt *prompt, char *word);
 void append_redirection_node(t_redirection **head, t_redirection **current, t_redirection *new_node);
 t_redirection *create_redirection_node(char *file_name, t_type type);
+
+// ** dollar_sign **
+char *extract_var_name(const char *str, int *index);
+char *replace_var_with_value(const char *str, const char *var_value, int start, int var_len);
+char *check_dollar_sign(char *command);
 
 
 #endif

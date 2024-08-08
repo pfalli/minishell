@@ -12,134 +12,6 @@
 
 #include "parsing.h"
 
-
-bool is_quote(char c)
-{
-    return c == '"' || c == '\'';
-}
-
-char *find_token_end(char *str, const char *delim)
-{
-    char *end = str;
-    bool in_quote = false;
-    char quote_char = '\0';
-
-    while (*end)
-    {
-        if (is_quote(*end))
-        {
-            if (in_quote && *end == quote_char)
-                in_quote = false;
-            else if (!in_quote)
-            {
-                in_quote = true;
-                quote_char = *end;
-            }
-        }
-        else if (!in_quote && strchr(delim, *end))
-            break;
-        end++;
-    }
-
-    return end;
-}
-
-char *ft_strtok(char *str, const char *delim)
-{
-    static char *last;
-    if (str == NULL)
-        str = last;
-    if (str == NULL)
-        return NULL;
-
-    // Skip leading delimiters
-    str += ft_strspn(str, delim);
-    if (*str == '\0')
-        return NULL;
-
-    // Find the end of the token
-    char *end = find_token_end(str, delim);
-
-    if (*end == '\0')
-        last = NULL;
-    else
-    {
-        *end = '\0';
-        last = end + 1;
-    }
-
-    return str;
-}
-
-
-char *ft_strtok_copy(char *str, const char *delim)
-{
-    static char *last;
-    if (str == NULL)
-        str = last;
-    if (str == NULL)
-        return NULL;
-
-    // Skip leading delimiters
-    str += ft_strspn(str, delim);
-    if (*str == '\0')
-        return NULL;
-
-    // Find the end of the token
-    char *end = find_token_end(str, delim);
-
-    if (*end == '\0')
-        last = NULL;
-    else
-    {
-        *end = '\0';
-        last = end + 1;
-    }
-
-    return str;
-}
-
-
-size_t ft_strspn(const char *str, const char *accept)
-{
-    const char *s = str;
-    while (*s)
-    {
-        const char *a = accept;
-        bool found = false;
-        while (*a)
-        {
-            if (*s == *a)
-            {
-                found = true;
-                break;
-            }
-            a++;
-        }
-        if (!found)
-            break;
-        s++;
-    }
-    return s - str;
-}
-
-size_t ft_strcspn(const char *str, const char *reject)
-{
-    const char *s = str;
-    while (*s)
-    {
-        const char *r = reject;
-        while (*r)
-        {
-            if (*s == *r)
-                return s - str;
-            r++;
-        }
-        s++;
-    }
-    return s - str;
-}
-
 int count_word(const char *str)
 {
     int count = 0;
@@ -198,6 +70,16 @@ void print_token_details(t_token *token_list)
     }
 }
 
+void print_redirection_list(t_redirection *redir_list)
+{
+    t_redirection *current = redir_list;
+    while (current != NULL)
+    {
+        printf("    File_name: %s, Type: %s\n", current->file_name, type_to_string(current->type));
+        current = current->next;
+    }
+}
+
 const char *type_to_string(enum s_type type)
 {
     switch (type)
@@ -223,4 +105,26 @@ const char *type_to_string(enum s_type type)
     default:
         return "UNKNOWN";
     }
+}
+
+void set_environment_variable(char *message)
+{
+    if (strncmp(message, "export ", 7) == 0)
+    {
+        char *env_var = message + 7;
+        char *equal_sign = strchr(env_var, '=');
+        if (equal_sign)
+        {
+            *equal_sign = '\0';
+            char *var_name = env_var;
+            char *var_value = equal_sign + 1;
+            setenv(var_name, var_value, 1);
+        }
+    }
+}
+
+void *free_and_return_null(void *ptr)
+{
+    free(ptr);
+    return NULL;
 }

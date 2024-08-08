@@ -33,7 +33,10 @@ t_token *init_multi_arrays(t_token *new, t_prompt *prompt)
             redirection = false;
         }
         else
+        {
             new->multi_command[new->cmd_count++] = strdup(word);
+            
+        }
         word = ft_strtok_copy(NULL, " ");
     }
     new->multi_command[new->cmd_count] = NULL;
@@ -170,8 +173,15 @@ void minishell_loop(t_prompt *prompt, t_token **token_list)
         }
         if(message)
             add_history(message);
+        
+        //set_environment_variable(message);
 
-        // ** checker_lexing** doublequotes, singlequotes
+        char *expanded_message = check_dollar_sign(message);
+        if (expanded_message)
+        {
+            free(message);
+            message = expanded_message;
+        }
 
         *token_list = create_linked_list(prompt, message);
         print_token_details(*token_list);
@@ -181,16 +191,6 @@ void minishell_loop(t_prompt *prompt, t_token **token_list)
     }
     free_readline();
     clear_history();
-}
-
-void print_redirection_list(t_redirection *redir_list)
-{
-    t_redirection *current = redir_list;
-    while (current != NULL)
-    {
-        printf("    File_name: %s, Type: %s\n", current->file_name, type_to_string(current->type));
-        current = current->next;
-    }
 }
 
 
