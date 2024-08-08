@@ -173,15 +173,7 @@ void minishell_loop(t_prompt *prompt, t_token **token_list)
         }
         if(message)
             add_history(message);
-        
-        //set_environment_variable(message);
-
-        char *expanded_message = check_dollar_sign(message);
-        if (expanded_message)
-        {
-            free(message);
-            message = expanded_message;
-        }
+        message = expand_message(message);
 
         *token_list = create_linked_list(prompt, message);
         print_token_details(*token_list);

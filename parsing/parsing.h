@@ -108,19 +108,17 @@ t_token *init_multi_arrays(t_token *new, t_prompt *prompt);
 bool initialize_multi_arrays(t_token *new, char *value_copy);
 
 // ** utils ** //
-char *check_dollar_sign( char *command);
 int count_word(const char *str);
-char **ft_split(const char *str, char delimiter);
-char *ft_strtok(char *str, const char *delim);
-char *ft_strtok_copy(char *str, const char *delim);
-size_t ft_strspn(const char *str, const char *accept);
-size_t ft_strcspn(const char *str, const char *reject);
-size_t ft_strlen_pipe(const char *str);
-bool is_quote(char c);
-char *find_token_end(char *str, const char *delim);
 const char *type_to_string(enum s_type type);
 void set_environment_variable(char *message);
 void *free_and_return_null(void *ptr);
+
+//** token.c **/
+char *ft_strtok(char *str, const char *delim);
+char *ft_strtok_copy(char *str, const char *delim);
+size_t ft_strspn(const char *str, const char *accept);
+bool is_quote(char c);
+char *find_token_end(char *str, const char *delim);
 
 // ** free ** //
 void free_prompt(t_prompt *prompt);
@@ -138,6 +136,7 @@ t_redirection *create_redirection_node(char *file_name, t_type type);
 char *extract_var_name(const char *str, int *index);
 char *replace_var_with_value(const char *str, const char *var_value, int start, int var_len);
 char *check_dollar_sign(char *command);
-
+char *replace_variable(char *str, int *i);
+char *expand_message(char *message);
 
 #endif
