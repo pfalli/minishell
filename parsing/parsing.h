@@ -109,7 +109,7 @@ bool initialize_multi_arrays(t_token *new, char *value_copy);
 
 // ** utils ** //
 int count_word(const char *str);
-const char *type_to_string(enum s_type type);
+const char *type_to_string(t_type type);
 void set_environment_variable(char *message);
 void *free_and_return_null(void *ptr);
 

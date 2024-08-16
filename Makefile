@@ -4,7 +4,8 @@ NAME = minishell
 LIBFTDIR = 42_libft
 LIBFT = $(LIBFTDIR)/libft.a
 PARS = parsing/parsing.c parsing/dollar_sign.c parsing/prompt.c parsing/redirection_token.c parsing/signals.c parsing/utils.c parsing/free.c parsing/token.c
-SRC = $(PARS)
+EXEC = main.c multidimensional.c multidimensional_utils.c env.c builtins.c command.c 
+SRC = $(PARS) $(EXEC)
 OBJS = $(SRC:.c=.o)
 
 all: $(NAME)

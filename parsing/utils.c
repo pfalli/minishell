@@ -81,7 +81,7 @@ void print_redirection_list(t_redirection *redir_list)
     }
 }
 
-const char *type_to_string(enum s_type type)
+const char *type_to_string(t_type type)
 {
     switch (type)
     {

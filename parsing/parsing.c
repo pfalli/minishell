@@ -157,18 +157,18 @@ void minishell_loop(t_prompt *prompt, t_token **token_list)
     clear_history();
 }
 
-int main()
-{
-    t_prompt prompt;
-    t_token *token_list = NULL;
+//  int main()
+//  {
+//      t_prompt prompt;
+//      t_token *token_list = NULL;// 
 
-    init_prompt(&prompt);
+//      init_prompt(&prompt);//   
 
-    minishell_loop(&prompt, &token_list);
+//      minishell_loop(&prompt, &token_list);//   
 
-    printf("prompt->message: %s\n", prompt.message);
-    ft_free_token_list(token_list);
-    free_prompt(&prompt);
-    free_readline();
-    return 0;
-}
+//      printf("prompt->message: %s\n", prompt.message);
+//      ft_free_token_list(token_list);
+//      free_prompt(&prompt);
+//      free_readline();
+//      return 0;
+//  }
