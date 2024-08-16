@@ -74,6 +74,7 @@ t_type search_type(char *word)
 {
     t_type type;
 
+	type = 0;
     if(strcmp(word, "<") == 0)
         type = REDIRECTION_IN;
     else if(strcmp(word, ">")== 0)

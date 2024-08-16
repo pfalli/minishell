@@ -1,4 +1,4 @@
-CC = gcc
+CC = cc
 CFLAGS = -Wall -Wextra -Werror -g
 NAME = minishell
 LIBFTDIR = 42_libft

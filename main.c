@@ -55,35 +55,17 @@ char	*value_finder(char *key, char **multidimensional)
 		return (NULL);
 }
 
-void pierotti_pars()
-{
-    t_prompt prompt;
-    t_token *token_list = NULL;
-
-    init_prompt(&prompt);
-
-    minishell_loop(&prompt, &token_list);
-
-    printf("prompt->message: %s\n", prompt.message);
-}
-
 int	main(int argc, char *argv[], char **envp)
 {
 	t_data	env;
 	t_prompt prompt;
     t_token *token_list = NULL;
-	// delete this part soon as you use it
-	(void)argc; 
-	*argv = NULL;
-	//
-
-	pierotti_pars();
-
+	if (argc > 1 && argv[0] != NULL)
+		return (printf("%s doesn't accept arguments!\n", argv[0]));
 	if (init_env(envp, &env) || init_path(&env))
 		return (0);
-	env.envp = add_to_multi(env.envp, "Hey=", "LOL");
-	env.envp = remove_from_multi(env.envp, "TERM=");
-
+    init_prompt(&prompt);
+    minishell_loop(&prompt, &token_list);
 	free_multi(env.path);
 	free_multi(env.envp);
 	ft_free_token_list(token_list);
