@@ -18,7 +18,7 @@ int	mini_cd(char **command, t_data *env)
 	int		pos;
 	char	*pwd;
 
-	if (ft_strncmp("~", command[1], 2) == 0)
+	if (!command[1] || ft_strncmp("~", command[1], 2) == 0)
 	{
 		free(command[1]);
 		command[1] = value_finder("HOME=", env->envp);
@@ -29,7 +29,7 @@ int	mini_cd(char **command, t_data *env)
 	if (status == -1)
 		return (perror("cd"), -1);
 	if (key_already_present("PWD=", env->envp, &pos))
-		env->envp = add_to_multi(env->envp, "OLDPWD=", env->envp[pos]);
+		env->envp = add_to_multi(env->envp, "OLDPWD=", env->envp[pos] + 4);
 	pwd = getcwd(NULL, 0);
 	env->envp = add_to_multi(env->envp, "PWD=", pwd);
 	free(pwd);
