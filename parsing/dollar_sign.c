@@ -12,8 +12,6 @@
 
 #include "parsing.h"
 
-#include "parsing.h"
-
 char *extract_var_name(const char *str, int *index)
 {
     char var_name[256];

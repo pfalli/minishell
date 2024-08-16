@@ -36,7 +36,7 @@
 
 // ****TOKEN_LIST STRUCT****
 
-typedef enum s_type
+typedef enum e_type
 {
     START = 0,
     REDIRECTION_IN,
