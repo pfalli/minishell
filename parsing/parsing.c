@@ -45,34 +45,6 @@ t_token *init_multi_arrays(t_token *new, t_prompt *prompt)
     return new;
 }
 
-//  t_token *create_redir_cmd(t_token *new, t_prompt *prompt)
-//  {
-//      char *value_copy = strdup(new->value);
-//      char *word;
-//      bool redirection = false;//   
-
-//      if (!value_copy)
-//          return NULL;
-//      word = ft_strtok_copy(value_copy, prompt->whitespace);
-//      while (word != NULL)
-//      {
-//          if (strcmp(word, prompt->symbols) == 0)
-//              redirection = true;
-//          else if (redirection)
-//          {
-//              create_redirection_list(word);
-//              redirection = false;
-//          }
-//          else
-//              create_command_list(word);
-//          word = ft_strtok_copy(NULL, prompt->whitespace);
-//      }
-//      new->multi_array_command[new->cmd_count] = NULL;
-//      new->multi_array_files[new->file_count] = NULL;
-//      free(value_copy);
-//      return new;
-//  }
-
 
 t_token *create_linked_list(t_prompt *prompt, char *message) // a token is everything between the PIPE |
 {

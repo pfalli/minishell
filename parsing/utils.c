@@ -107,22 +107,6 @@ const char *type_to_string(enum s_type type)
     }
 }
 
-void set_environment_variable(char *message)
-{
-    if (strncmp(message, "export ", 7) == 0)
-    {
-        char *env_var = message + 7;
-        char *equal_sign = strchr(env_var, '=');
-        if (equal_sign)
-        {
-            *equal_sign = '\0';
-            char *var_name = env_var;
-            char *var_value = equal_sign + 1;
-            setenv(var_name, var_value, 1);
-        }
-    }
-}
-
 void *free_and_return_null(void *ptr)
 {
     free(ptr);
