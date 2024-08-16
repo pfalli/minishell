@@ -49,5 +49,5 @@ char	*key_extractor(char *text);
 char	*value_finder(char *key, char **multidimensional);
 char	*export_key(char *src);
 int		command_on_path(char **executable, t_data *data);
-
+void	command_processor(t_token *cmdandfile, t_data *data);
 #endif

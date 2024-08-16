@@ -33,6 +33,8 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 
+typedef struct s_token t_token;
+typedef struct s_data t_data;
 
 // ****TOKEN_LIST STRUCT****
 
@@ -88,7 +90,7 @@ typedef struct s_token
 
 // **************************************************************
 
-void minishell_loop(t_prompt *prompt, t_token **token_list);
+void minishell_loop(t_prompt *prompt, t_token **token_list, t_data *data);
 
 void parser(t_prompt *prompt);
 t_token *lexing(t_prompt *prompt);

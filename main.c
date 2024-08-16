@@ -65,7 +65,7 @@ int	main(int argc, char *argv[], char **envp)
 	if (init_env(envp, &env) || init_path(&env))
 		return (0);
     init_prompt(&prompt);
-    minishell_loop(&prompt, &token_list);
+    minishell_loop(&prompt, &token_list, &env);
 	free_multi(env.path);
 	free_multi(env.envp);
 	ft_free_token_list(token_list);

@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "parsing.h"
+#include "../minishell.h"
 
 t_token *init_multi_arrays(t_token *new, t_prompt *prompt)
 {
@@ -131,7 +132,7 @@ bool initialize_multi_arrays(t_token *new, char *value_copy)
     return true;
 }
 
-void minishell_loop(t_prompt *prompt, t_token **token_list)
+void minishell_loop(t_prompt *prompt, t_token **token_list, t_data *data)
 {
     char *message;
 
@@ -149,7 +150,7 @@ void minishell_loop(t_prompt *prompt, t_token **token_list)
 
         *token_list = create_linked_list(prompt, message);
         print_token_details(*token_list);
-
+		command_processor(*token_list, data);
         if (message)
 			free(message);
     }
