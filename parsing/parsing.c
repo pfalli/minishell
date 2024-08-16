@@ -157,7 +157,6 @@ void minishell_loop(t_prompt *prompt, t_token **token_list)
     clear_history();
 }
 
-
 int main()
 {
     t_prompt prompt;

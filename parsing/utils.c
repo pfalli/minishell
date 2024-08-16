@@ -70,6 +70,7 @@ void print_token_details(t_token *token_list)
     }
 }
 
+
 void print_redirection_list(t_redirection *redir_list)
 {
     t_redirection *current = redir_list;

@@ -25,6 +25,7 @@ char *extract_var_name(const char *str, int *index)
     return ft_strdup(var_name);
 }
 
+
 char *replace_var_with_value(const char *str, const char *var_value, int start, int var_len)
 {
     int new_len = strlen(str) + strlen(var_value) - var_len;
@@ -37,6 +38,7 @@ char *replace_var_with_value(const char *str, const char *var_value, int start, 
     strcat(new_str, &str[start]);
     return new_str;
 }
+
 
 char *replace_variable(char *str, int *i)
 {
@@ -54,6 +56,7 @@ char *replace_variable(char *str, int *i)
     free(str);
     return new_str;
 }
+
 
 char *check_dollar_sign(char *command)
 {
@@ -74,6 +77,7 @@ char *check_dollar_sign(char *command)
     }
     return str;
 }
+
 
 char *expand_message(char *message)
 {
