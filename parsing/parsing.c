@@ -10,7 +10,6 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "parsing.h"
 #include "../minishell.h"
 
 t_token *init_multi_arrays(t_token *new, t_prompt *prompt)
@@ -34,11 +33,8 @@ t_token *init_multi_arrays(t_token *new, t_prompt *prompt)
             redirection = false;
         }
         else
-        {
             new->multi_command[new->cmd_count++] = strdup(word);
-            
-        }
-        word = ft_strtok_copy(NULL, " ");
+        word = ft_strtok_copy(NULL, prompt->whitespace);
     }
     new->multi_command[new->cmd_count] = NULL;
     new->multi_files[new->file_count] = NULL;
@@ -146,7 +142,7 @@ void minishell_loop(t_prompt *prompt, t_token **token_list, t_data *data)
         }
         if(message)
             add_history(message);
-        message = expand_message(message);
+        message = expand_message(message, data);
 
         *token_list = create_linked_list(prompt, message);
         print_token_details(*token_list);

@@ -145,8 +145,10 @@ int	mini_echo(char **command)
 		else
 			command[0] += 2;
 	}
-	while (command[i])
-		printf("%s", command[i++]);
+	while (command[i + 1])
+		printf("%s ", command[i++]);
+	if (command[i])
+		printf("%s", command[i]);
 	if (new_line)
 		printf("\n");
 	return (1);

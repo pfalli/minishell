@@ -137,9 +137,9 @@ t_redirection *create_redirection_node(char *file_name, t_type type);
 // ** dollar_sign **
 char *extract_var_name(const char *str, int *index);
 char *replace_var_with_value(const char *str, const char *var_value, int start, int var_len);
-char *check_dollar_sign(char *command);
-char *replace_variable(char *str, int *i);
-char *expand_message(char *message);
+char *check_dollar_sign(char *command, t_data *data);
+char *replace_variable(char *str, int *i,t_data *data);
+char *expand_message(char *message, t_data *data);
 char *get_env_value(const char *var_name, t_data *env);
 
 #endif

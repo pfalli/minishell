@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "parsing.h"
+#include "../minishell.h"
 
 char *extract_var_name(const char *str, int *index)
 {
@@ -19,6 +19,7 @@ char *extract_var_name(const char *str, int *index)
 
     while (str[*index] && (ft_isalnum(str[*index]) || str[*index] == '_'))
         var_name[j++] = str[(*index)++];
+    var_name[j++] = '=';
     var_name[j] = '\0';
     return (ft_strdup(var_name));
 }
@@ -68,7 +69,7 @@ char *replace_var_with_value(const char *str, const char *var_value, int start, 
 //  }
 
 
-char *replace_variable(char *str, int *i) // allocated from extract_var_name
+char *replace_variable(char *str, int *i, t_data *data) // allocated from extract_var_name
 {
     int var_start;
     char *var_name;
@@ -78,7 +79,7 @@ char *replace_variable(char *str, int *i) // allocated from extract_var_name
     if (!var_name)
         return free_and_return_null(str);
     char *var_value;
-    var_value = getenv(var_name); // i have to take it from envp???
+    var_value = value_finder(var_name, data->envp);
     free(var_name);
     if (!var_value)
         return (str);
@@ -92,7 +93,7 @@ char *replace_variable(char *str, int *i) // allocated from extract_var_name
 }
 
 
-char *check_dollar_sign(char *command)
+char *check_dollar_sign(char *command, t_data *data)
 {
     char *str;
     int i;
@@ -106,7 +107,7 @@ char *check_dollar_sign(char *command)
         if (str[i] == '$')
         {
             i++;
-            str = replace_variable(str, &i);
+            str = replace_variable(str, &i, data);
             if (!str)
                 return NULL;
         }
@@ -117,11 +118,11 @@ char *check_dollar_sign(char *command)
 }
 
 
-char *expand_message(char *message)
+char *expand_message(char *message, t_data *data)
 {
     char *expanded_message;
 
-    expanded_message = check_dollar_sign(message);
+    expanded_message = check_dollar_sign(message, data);
     if (expanded_message)
     {
         free(message);
