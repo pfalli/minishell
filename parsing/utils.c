@@ -81,6 +81,23 @@ void print_redirection_list(t_redirection *redir_list)
     }
 }
 
+char *ft_strcat(char *dest, const char *src)
+{
+    char *dest_end;
+
+    dest_end = dest;
+    while (*dest_end != '\0')
+        dest_end++;
+    while (*src != '\0')
+    {
+        *dest_end = *src;
+        dest_end++;
+        src++;
+    }
+    *dest_end = '\0';
+    return (dest);
+}
+
 const char *type_to_string(t_type type)
 {
     switch (type)

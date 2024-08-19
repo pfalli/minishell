@@ -101,9 +101,6 @@ t_token *create_token(char *word);
 t_type search_type(char *word);
 void append_node(t_token **head, t_token **current, t_token *new);
 
-void print_token_details(t_token *token_list);
-void print_redirection_list(t_redirection *redir_list);
-
 // ** init ** //
 
 t_token *init_multi_arrays(t_token *new, t_prompt *prompt);
@@ -114,6 +111,9 @@ int count_word(const char *str);
 const char *type_to_string(t_type type);
 void set_environment_variable(char *message);
 void *free_and_return_null(void *ptr);
+char *ft_strcat(char *dest, const char *src);
+void print_token_details(t_token *token_list);
+void print_redirection_list(t_redirection *redir_list);
 
 //** token.c **/
 char *ft_strtok(char *str, const char *delim);
@@ -140,5 +140,6 @@ char *replace_var_with_value(const char *str, const char *var_value, int start, 
 char *check_dollar_sign(char *command);
 char *replace_variable(char *str, int *i);
 char *expand_message(char *message);
+char *get_env_value(const char *var_name, t_data *env);
 
 #endif
