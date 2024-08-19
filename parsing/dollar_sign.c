@@ -72,7 +72,6 @@ char *replace_variable(char *str, int *i, t_data *data) // allocated from extrac
     free(var_name);
     if (!var_value)
         return (str);
-    //printf("variable: %s\n", var_value);
     char *new_str;
     new_str = replace_var_with_value(str, var_value, *i, *i - var_start);
     if (!new_str)
@@ -106,12 +105,28 @@ char *check_dollar_sign(char *command, t_data *data)
     return (str);
 }
 
+bool single_quote(const char *str)
+{
+    bool single_quotes = false;
+    while (*str)
+    {
+        if (*str == '\'')
+            single_quotes = !single_quotes;
+        else if (*str == '$' && single_quotes)
+            return true;
+        str++;
+    }
+    return false;
+}
+
 
 char *expand_message(char *message, t_data *data)
 {
     char *expanded_message;
     char *removed;
 
+    if (single_quote(message))
+        return (message);
     expanded_message = check_dollar_sign(message, data);
     if (expanded_message)
     {
@@ -119,6 +134,6 @@ char *expand_message(char *message, t_data *data)
         message = expanded_message;
     }
     removed = remove_dollar(message);
-    printf("expander: %s", removed);
+    
     return (removed);
 }

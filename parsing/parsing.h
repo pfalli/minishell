@@ -122,6 +122,7 @@ char *ft_strtok_copy(char *str, const char *delim);
 size_t ft_strspn(const char *str, const char *accept);
 bool is_quote(char c);
 char *find_token_end(char *str, const char *delim);
+char *check_syntax(char *word);
 
 // ** free ** //
 void free_prompt(t_prompt *prompt);

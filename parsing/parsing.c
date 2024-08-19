@@ -12,6 +12,22 @@
 
 #include "../minishell.h"
 
+char *check_syntax(char *word)
+{
+    char *new;
+    size_t len;
+
+    if (!word || (len = strlen(word)) < 2)
+        return NULL;
+    new = (char *)malloc(len - 1);
+    if (!new)
+        return NULL;
+    strncpy(new, word + 1, len - 2);
+    new[len - 2] = '\0';
+
+    return (ft_strdup(new));
+}
+
 t_token *init_multi_arrays(t_token *new, t_prompt *prompt)
 {
     char *value_copy = strdup(new->value);

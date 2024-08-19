@@ -55,8 +55,7 @@ char *ft_strtok(char *str, const char *delim)
     str += ft_strspn(str, delim);
     if (*str == '\0')
         return NULL;
-
-    char *end = find_token_end(str, delim); // for quoted substring
+    char *end = find_token_end(str, delim); // string with quotes
 
     if (*end == '\0')
         last = NULL;
@@ -69,6 +68,20 @@ char *ft_strtok(char *str, const char *delim)
     return str;
 }
 
+void strip_quotes(char **str, char *end)
+{
+    char quote = '\0';
+
+    if (**str == '"' || **str == '\'')
+    {
+        quote = **str;
+        (*str)++;
+    }
+    if (*(end - 1) == quote)
+    {
+        *(end - 1) = '\0';
+    }
+}
 
 char *ft_strtok_copy(char *str, const char *delim)
 {
@@ -91,7 +104,7 @@ char *ft_strtok_copy(char *str, const char *delim)
         *end = '\0';
         last = end + 1;
     }
-
+    strip_quotes(&str, end);
     return str;
 }
 
