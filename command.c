@@ -27,6 +27,8 @@ int	command_on_path(char **executable, t_data *data)
 	int		i;
 
 	i = 0;
+	if (!data->path || !data->path[0])
+		return (0);
 	command_with_slash = ft_strjoin("/", executable[0]);
 	while (data->path[i])
 	{
