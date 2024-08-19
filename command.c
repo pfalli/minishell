@@ -69,11 +69,11 @@ void	wire_files(t_execution *exec, t_redirection *cmdandfile)
 	while (current)
 	{
 		if (current->type == REDIRECTION_IN)
-			temp_in = open(current->file_name, O_RDONLY);
+			temp_in = open(current->file_name, O_RDONLY, 0444);
 		else if (current->type == REDIRECTION_OUT)
-			temp_out = open(current->file_name, O_WRONLY | O_CREAT);
+			temp_out = open(current->file_name, O_WRONLY | O_CREAT, 0644);
 		else if (current->type == APPEND)
-			temp_out = open(current->file_name, O_APPEND | O_CREAT);
+			temp_out = open(current->file_name, O_APPEND | O_CREAT, 0644);
 		else if (current->type == HEREDOC)
 			temp_in = printf("Heredoc needs to be called here");
 		current = current->next;
@@ -95,18 +95,18 @@ void	executor(t_token *cmdandfile, t_data *data)
 	exec.out = 1;
 	wire_files(&exec, cmdandfile->redirection);
 	// dup files
-	if (builtin(cmdandfile->multi_command, data) == 1)
-		return ;
-	if (access(cmdandfile->multi_command[0], X_OK) != 0)
-		command_on_path(cmdandfile->multi_command, data);
-	pid = fork();
-	if (pid == -1)
-		perror("fork");
-	else if (pid == 0)
-	{
-		execve(cmdandfile->multi_command[0], cmdandfile->multi_command, data->envp);
-		exit(0);
-	}
+	// if (builtin(cmdandfile->multi_command, data) == 1)
+	// 	return ;
+	// if (access(cmdandfile->multi_command[0], X_OK) != 0)
+	// 	command_on_path(cmdandfile->multi_command, data);
+	// pid = fork();
+	// if (pid == -1)
+	// 	perror("fork");
+	// else if (pid == 0)
+	// {
+	// 	execve(cmdandfile->multi_command[0], cmdandfile->multi_command, data->envp);
+	// 	exit(0);
+	// }
 	return ;
 }
 
