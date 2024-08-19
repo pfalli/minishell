@@ -23,11 +23,11 @@ int	mini_cd(char **command, t_data *env)
 		free(command[1]);
 		command[1] = value_finder("HOME=", env->envp);
 		if (command[1] == NULL)
-			return (printf("HOME is not set\n"), -1);
+			return (printf("HOME is not set\n"), 1);
 	}
 	status = chdir(command[1]);
 	if (status == -1)
-		return (perror("cd"), -1);
+		return (perror("cd"), 1);
 	if (key_already_present("PWD=", env->envp, &pos))
 		env->envp = add_to_multi(env->envp, "OLDPWD=", env->envp[pos] + 4);
 	pwd = getcwd(NULL, 0);
@@ -171,6 +171,8 @@ int	builtin(char **command, t_data *env)
 		return (mini_export(command, env));
 	if (ft_strncmp(command[0], "unset", 5) == 0)
 	{
+		if (command[1] == NULL)
+			return (0);
 		if (ft_strncmp("PATH", command[1], ft_strlen(command[1])) == 0)
 			free_multi(env->path);
 		env->path = NULL;
