@@ -1,0 +1,9 @@
+
+
+**/*.o
+
+
+**/libft.a
+
+.vscode/
+minishell

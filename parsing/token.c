@@ -35,7 +35,7 @@ char *find_token_end(char *str, const char *delim)
                 quote_char = *end;
             }
         }
-        else if (!inside_quote && strchr(delim, *end))
+        else if (!inside_quote && ft_strchr(delim, *end))
             break;
         end++;
     }

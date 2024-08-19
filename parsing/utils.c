@@ -130,3 +130,29 @@ void *free_and_return_null(void *ptr)
     free(ptr);
     return NULL;
 }
+
+
+char *remove_dollar(char *str)
+{
+    int i = 0;
+
+    if (!str)
+        return NULL;
+    int len = strlen(str);
+    char *new_str = (char *)malloc(len + 1);
+    if (!new_str)
+        return NULL;
+    int j = 0;
+    while ( i < len)
+    {
+        if (str[i] != '$')
+        {
+            new_str[j] = str[i];
+            j++;
+        }
+        i++;
+    }
+    new_str[j] = '\0';
+    free(str);
+    return new_str;
+}

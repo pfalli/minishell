@@ -30,18 +30,7 @@ char *replace_var_with_value(const char *str, const char *var_value, int start, 
     int new_len;
     char *new_str;
 
-    //  if (str[start - var_len - 1] == '"')
-    //  {
-    //      start--;
-    //      var_len--;
-    //  }
-    //  if (str[start - var_len] == '$')
-    //      var_len--;
-    //  if (var_value[0] == '"' && var_value[ft_strlen(var_value) - 1] == '"')
-    //  {
-    //      var_value++;
-    //      var_len -= 2;
-    //  }
+
     new_len = ft_strlen(str) + ft_strlen(var_value) - var_len;
     new_str = malloc(new_len + 1);
     if (!new_str)
@@ -121,6 +110,7 @@ char *check_dollar_sign(char *command, t_data *data)
 char *expand_message(char *message, t_data *data)
 {
     char *expanded_message;
+    char *removed;
 
     expanded_message = check_dollar_sign(message, data);
     if (expanded_message)
@@ -128,6 +118,7 @@ char *expand_message(char *message, t_data *data)
         free(message);
         message = expanded_message;
     }
-    //printf("dollar sign: %s\n", message);
-    return (message);
+    removed = remove_dollar(message);
+    printf("expander: %s", removed);
+    return (removed);
 }

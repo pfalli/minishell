@@ -114,6 +114,7 @@ void *free_and_return_null(void *ptr);
 char *ft_strcat(char *dest, const char *src);
 void print_token_details(t_token *token_list);
 void print_redirection_list(t_redirection *redir_list);
+char *remove_dollar(char *str);
 
 //** token.c **/
 char *ft_strtok(char *str, const char *delim);
