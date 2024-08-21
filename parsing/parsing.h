@@ -33,7 +33,7 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 
-extern volatile sig_atomic_t g_signal_received;
+extern volatile sig_atomic_t    g_signal_received;
 
 #define SIGINT_RECEIVED 1
 #define SIGQUIT_RECEIVED 2

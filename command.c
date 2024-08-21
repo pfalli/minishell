@@ -51,7 +51,7 @@ int	assign_and_close(int old_fd, int new_fd)
 {
 	if (new_fd > -1)
 	{
-		if (new_fd > 1)
+		if (old_fd > 1)
 			close(old_fd);
 		return (new_fd);
 	}
