@@ -10,24 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-
-
 #include "../minishell.h"
-
-char	*check_syntax(char *word)
-{
-	char    *new;
-	size_t  len;
-
-	if (!word || (len = ft_strlen(word)) < 2)
-		return (NULL);
-	new = (char *)malloc(len - 1);
-	if (!new)
-		return (NULL);
-	strncpy(new, word + 1, len - 2);
-	new[len - 2] = '\0';
-	return(ft_strdup(new));
-}
 
 t_token	*init_multi_arrays(t_token *new, t_prompt *prompt)
 {
@@ -64,12 +47,16 @@ t_token	*init_multi_arrays(t_token *new, t_prompt *prompt)
 
 t_token	*create_linked_list(t_prompt *prompt, char *message)
 {
-	t_token *head = NULL;
-	t_token *new = NULL;
-	t_token *current = NULL;
-	char *save_prompt_message = strdup(message);
-	char *token = ft_strtok(save_prompt_message, "|");
-
+	t_token	*head;
+	t_token	*new;
+	t_token	*current;
+	char	*save_prompt_message;
+	char	*token;
+	head = NULL;
+	new = NULL;
+	current = NULL;
+	save_prompt_message = strdup(message);
+	token = ft_strtok(save_prompt_message, "|");
 	while (token != NULL)
 	{
 		new = create_token(token);
@@ -103,10 +90,12 @@ void	append_node(t_token **head, t_token **current, t_token *new)
 
 t_token	*create_token(char *word)
 {
-	t_token *new_token;
-	int i = 0;
-	int length = strlen(word);
+	t_token	*new_token;
+	int		i;
+	int		length;
 
+	i = 0;
+	length = strlen(word);
 	new_token = malloc(sizeof(t_token));
 	if (new_token == NULL)
 		return (NULL);
@@ -133,39 +122,10 @@ bool	initialize_multi_arrays(t_token *new, char *value_copy)
 	new->word_count = count_word(new->value);
 	new->multi_command = malloc(sizeof(char *) * (new->word_count + 1));
 	new->multi_files = malloc(sizeof(char *) * (new->word_count + 1));
-	if(!new->multi_command || !new->multi_files)
+	if (!new->multi_command || !new->multi_files)
 	{
 		free(value_copy);
 		return (false);
 	}
 	return (true);
-}
-
-void	minishell_loop(t_prompt *prompt, t_token **token_list, t_data *data)
-{
-	char    *message;
-
-	while (1)
-	{
-		if (g_signal_received)
-		{
-			g_signal_received = 0;
-			continue ;
-		}
-		message = readline(RED "MINISHELL$$ " RESET);
-		if (message == NULL)
-		{
-			printf("exitt (detected Ctrl + D)\n");
-			break ;
-		}
-		if (message)
-			add_history(message);
-		message = expand_message(message, data);
-		*token_list = create_linked_list(prompt, message);
-		print_token_details(*token_list);
-		command_processor(*token_list, data);
-		if (message)
-			free(message);
-		ft_free_token_list(*token_list);
-	}
 }

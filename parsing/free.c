@@ -15,13 +15,12 @@
 
 #include "../minishell.h"
 
-
 void	ft_free_token_list(t_token *token_list)
 {
-	t_token *token_list_holder;
+	t_token	*token_list_holder;
 
 	if (!token_list)
-		return;
+		return ;
 	while (token_list)
 	{
 		free(token_list->value);
@@ -41,7 +40,7 @@ void	free_prompt(t_prompt *prompt)
 
 void	free_multi_arr(char **arr)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (arr[i])

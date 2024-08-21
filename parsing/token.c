@@ -5,45 +5,42 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: pfalli <pfalli@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/08/08 09:54:43 by pfalli            #+#    #+#             */
-/*   Updated: 2024/08/08 09:54:43 by pfalli           ###   ########.fr       */
+/*   Created: 2024/08/21 14:16:31 by pfalli            #+#    #+#             */
+/*   Updated: 2024/08/21 14:16:31 by pfalli           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-bool is_quote(char c)
+char	*string_with_quotes(char *str, const char *delim)
 {
-    return c == '"' || c == '\'';
+	char	*end;
+	bool	inside_quote;
+	char	quote_char;
+
+	end = str;
+	inside_quote = false;
+	quote_char = '\0';
+	while (*end)
+	{
+		if (is_quote(*end))
+		{
+			if (inside_quote && *end == quote_char)
+				inside_quote = false;
+			else if (!inside_quote)
+			{
+				inside_quote = true;
+				quote_char = *end;
+			}
+		}
+		else if (!inside_quote && ft_strchr(delim, *end))
+			break ;
+		end++;
+	}
+	return (end);
 }
 
-char *find_token_end(char *str, const char *delim)
-{
-    char *end = str;
-    bool inside_quote = false;
-    char quote_char = '\0';
-
-    while (*end)
-    {
-        if (is_quote(*end))
-        {
-            if (inside_quote && *end == quote_char)
-                inside_quote = false;
-            else if (!inside_quote)
-            {
-                inside_quote = true;
-                quote_char = *end;
-            }
-        }
-        else if (!inside_quote && ft_strchr(delim, *end))
-            break;
-        end++;
-    }
-    return end;
-}
-
-
-
+// old one
 char *ft_strtok(char *str, const char *delim)
 {
     static char *last;
@@ -55,7 +52,7 @@ char *ft_strtok(char *str, const char *delim)
     str += ft_strspn(str, delim);
     if (*str == '\0')
         return NULL;
-    char *end = find_token_end(str, delim); // string with quotes
+    char *end = string_with_quotes(str, delim);
 
     if (*end == '\0')
         last = NULL;
@@ -68,21 +65,23 @@ char *ft_strtok(char *str, const char *delim)
     return str;
 }
 
-void strip_quotes(char **str, char *end)
+void	strip_quotes(char **str, char *end)
 {
-    char quote = '\0';
+	char	quote;
 
-    if (**str == '"' || **str == '\'')
-    {
-        quote = **str;
-        (*str)++;
-    }
-    if (*(end - 1) == quote)
-    {
-        *(end - 1) = '\0';
-    }
+	quote = '\0';
+	if (**str == '"' || **str == '\'')
+	{
+		quote = **str;
+		(*str)++;
+	}
+	if (*(end - 1) == quote)
+	{
+		*(end - 1) = '\0';
+	}
 }
 
+// old one
 char *ft_strtok_copy(char *str, const char *delim)
 {
     static char *last;
@@ -95,7 +94,7 @@ char *ft_strtok_copy(char *str, const char *delim)
     if (*str == '\0')
         return NULL;
 
-    char *end = find_token_end(str, delim);
+    char *end = string_with_quotes(str, delim);
 
     if (*end == '\0')
         last = NULL;
@@ -106,28 +105,4 @@ char *ft_strtok_copy(char *str, const char *delim)
     }
     strip_quotes(&str, end);
     return str;
-}
-
-
-size_t ft_strspn(const char *str, const char *accept)
-{
-    const char *s = str;
-    while (*s)
-    {
-        const char *a = accept;
-        bool found = false;
-        while (*a)
-        {
-            if (*s == *a)
-            {
-                found = true;
-                break;
-            }
-            a++;
-        }
-        if (!found)
-            break;
-        s++;
-    }
-    return s - str;
 }
