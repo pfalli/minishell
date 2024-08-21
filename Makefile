@@ -40,3 +40,5 @@ fclean: clean
 re: fclean all
 
 .PHONY: all fclean clean re
+
+# valgrind --leak-check=full --track-origins=yes

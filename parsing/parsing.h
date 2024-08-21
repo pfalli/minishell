@@ -33,6 +33,11 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 
+extern volatile sig_atomic_t g_signal_received;
+
+#define SIGINT_RECEIVED 1
+#define SIGQUIT_RECEIVED 2
+
 typedef struct s_token t_token;
 typedef struct s_data t_data;
 
@@ -136,12 +141,16 @@ t_redirection *create_redirection_list(t_token *new, t_prompt *prompt, char *wor
 void append_redirection_node(t_redirection **head, t_redirection **current, t_redirection *new_node);
 t_redirection *create_redirection_node(char *file_name, t_type type);
 
-// ** dollar_sign **
+// ** dollar_sign **//
 char *extract_var_name(const char *str, int *index);
 char *replace_var_with_value(const char *str, const char *var_value, int start, int var_len);
 char *check_dollar_sign(char *command, t_data *data);
 char *replace_variable(char *str, int *i,t_data *data);
 char *expand_message(char *message, t_data *data);
 char *get_env_value(const char *var_name, t_data *env);
+
+// ** signals ** //
+void sig_int (int signal);
+void sig_quit(int signal);
 
 #endif

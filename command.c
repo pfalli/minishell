@@ -90,23 +90,36 @@ void	executor(t_token *cmdandfile, t_data *data)
 {
 	t_execution	exec;
 	int			pid;
+	
 
 	exec.in = 0;
 	exec.out = 1;
 	wire_files(&exec, cmdandfile->redirection);
-	// dup files
-	// if (builtin(cmdandfile->multi_command, data) == 1)
-	// 	return ;
-	// if (access(cmdandfile->multi_command[0], X_OK) != 0)
-	// 	command_on_path(cmdandfile->multi_command, data);
-	// pid = fork();
-	// if (pid == -1)
-	// 	perror("fork");
-	// else if (pid == 0)
-	// {
-	// 	execve(cmdandfile->multi_command[0], cmdandfile->multi_command, data->envp);
-	// 	exit(0);
-	// }
+	//dup files;
+
+	if (builtin(cmdandfile->multi_command, data) == 1)
+		return ;
+	if (access(cmdandfile->multi_command[0], X_OK) != 0)
+		command_on_path(cmdandfile->multi_command, data);
+	pid = fork();
+	if (pid == -1)
+		perror("fork");
+	else if (pid == 0)
+	{
+		execve(cmdandfile->multi_command[0], cmdandfile->multi_command, data->envp);
+		exit(0);
+	}
+    // Parent process: wait for the child process and check for SIGINT
+    int status;
+    waitpid(pid, &status, 0);
+    if (g_signal_received == SIGINT_RECEIVED)
+	{
+        g_signal_received = 0;
+	}
+	if (g_signal_received == SIGQUIT_RECEIVED)
+	{
+        g_signal_received = 0;
+	}
 	return ;
 }
 

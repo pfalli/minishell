@@ -17,7 +17,7 @@ char *check_syntax(char *word)
     char *new;
     size_t len;
 
-    if (!word || (len = strlen(word)) < 2)
+    if (!word || (len = ft_strlen(word)) < 2)
         return NULL;
     new = (char *)malloc(len - 1);
     if (!new)
@@ -150,8 +150,13 @@ void minishell_loop(t_prompt *prompt, t_token **token_list, t_data *data)
 
     while (1)
     {
+        if (g_signal_received)
+        {
+            g_signal_received = 0;
+            continue;
+        }
         message = readline(RED "MINISHELL$$ " RESET);
-        if (strlen(message) == 0)
+        if (message == NULL)
         {
             free(message);
             return ;
@@ -165,9 +170,8 @@ void minishell_loop(t_prompt *prompt, t_token **token_list, t_data *data)
 		command_processor(*token_list, data);
         if (message)
 			free(message);
+        ft_free_token_list(*token_list);
     }
-    free_readline();
-    clear_history();
 }
 
 //  int main()
