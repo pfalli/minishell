@@ -15,7 +15,7 @@ CFLAGS = -Wall -Wextra -Werror -g
 NAME = minishell
 LIBFTDIR = 42_libft
 LIBFT = $(LIBFTDIR)/libft.a
-PARS = parsing/parsing.c parsing/dollar_sign.c parsing/prompt.c parsing/redirection_token.c parsing/signals.c parsing/utils.c parsing/free.c parsing/token.c
+PARS = parsing/parsing.c parsing/dollar_sign.c parsing/prompt.c parsing/redirection_token.c parsing/signals.c parsing/utils.c parsing/print_test.c parsing/free.c parsing/token.c parsing/dollar_sign2.c parsing/loop.c
 EXEC = main.c multidimensional.c multidimensional_utils.c env.c builtins_first.c builtins_sec.c command.c 
 SRC = $(PARS) $(EXEC)
 OBJS = $(SRC:.c=.o)

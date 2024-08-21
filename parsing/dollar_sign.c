@@ -15,13 +15,12 @@
 
 #include "../minishell.h"
 
-
 char	*extract_var_name(const char *str, int *index)
 {
-	char var_name[256];
-	int j;
-	j = 0;
+	char	var_name[256];
+	int		j;
 
+	j = 0;
 	while (str[*index] && (ft_isalnum(str[*index]) || str[*index] == '_'))
 		var_name[j++] = str[(*index)++];
 	var_name[j++] = '=';
@@ -32,8 +31,8 @@ char	*extract_var_name(const char *str, int *index)
 char	*replace_var_with_value(const char *str, const char *var_value,
 		int start, int var_len)
 {
-	int new_len;
-	char *new_str;
+	int		new_len;
+	char	*new_str;
 
 	new_len = ft_strlen(str) + ft_strlen(var_value) - var_len;
 	new_str = malloc(new_len + 1);
@@ -47,10 +46,10 @@ char	*replace_var_with_value(const char *str, const char *var_value,
 
 char	*replace_variable(char *str, int *i, t_data *data)
 {
-	int var_start;
-	char *var_name;
-	char *var_value;
-	char *new_str;
+	int		var_start;
+	char	*var_name;
+	char	*var_value;
+	char	*new_str;
 
 	var_start = *i;
 	var_name = extract_var_name(str, i);
@@ -69,8 +68,8 @@ char	*replace_variable(char *str, int *i, t_data *data)
 
 char	*check_dollar_sign(char *command, t_data *data)
 {
-	char *str;
-	int i;
+	char	*str;
+	int		i;
 
 	i = 0;
 	str = ft_strdup(command);
@@ -93,7 +92,7 @@ char	*check_dollar_sign(char *command, t_data *data)
 
 bool	single_quote(const char *str)
 {
-	bool single_quotes;
+	bool	single_quotes;
 
 	single_quotes = false;
 	while (*str)
@@ -105,21 +104,4 @@ bool	single_quote(const char *str)
 		str++;
 	}
 	return (false);
-}
-
-char	*expand_message(char *message, t_data *data)
-{
-	char *expanded_message;
-	char *removed;
-
-	if (single_quote(message))
-		return (message);
-	expanded_message = check_dollar_sign(message, data);
-	if (expanded_message)
-	{
-		free(message);
-		message = expanded_message;
-	}
-	removed = remove_dollar(message);
-	return(removed);
 }

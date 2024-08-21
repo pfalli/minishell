@@ -1,158 +1,113 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.c                                            :+:      :+:    :+:   */
+/*   utils.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pfalli <pfalli@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/22 10:13:56 by pfalli            #+#    #+#             */
-/*   Updated: 2024/07/22 10:13:56 by pfalli           ###   ########.fr       */
+/*   Created: 2024/08/21 14:10:44 by pfalli            #+#    #+#             */
+/*   Updated: 2024/08/21 14:14:30 by pfalli           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int count_word(const char *str)
+char	*ft_strcat(char *dest, const char *src)
 {
-    int count = 0;
-    bool in_token = false;
+	char	*dest_end;
 
-    while (*str)
-    {
-        if (*str == ' ')
-        {
-            in_token = false;
-        }
-        else if (!in_token)
-        {
-            in_token = true;
-            count++;
-        }
-        str++;
-    }
-    return count;
+	dest_end = dest;
+	while (*dest_end != '\0')
+		dest_end++;
+	while (*src != '\0')
+	{
+		*dest_end = *src;
+		dest_end++;
+		src++;
+	}
+	*dest_end = '\0';
+	return (dest);
 }
 
-
-
-void print_token_details(t_token *token_list)
+int	count_word(const char *str)
 {
-    int i = 0;
-    int j;
+	int		count;
+	bool	in_token;
 
-    t_token *current_token = token_list;
-    while (current_token != NULL)
-    {
-        printf("Token_value[%i]: %s\n", i, current_token->value);
-
-        if (current_token->multi_command == NULL)
-            printf("ERROR MULTI COMMAND\n");
-        printf("  Commands:\n");
-        j = 0;
-        while (j < current_token->cmd_count)
-        {
-            printf("    Command[%d]: %s\n", j, current_token->multi_command[j]);
-            j++;
-        }
-        if (current_token->multi_files == NULL)
-            printf("ERROR MULTI FILE\n");
-        printf("  Files:\n");
-        j = 0;
-        while (j < current_token->file_count)
-        {
-            printf("    File[%d]: %s\n", j, current_token->multi_files[j]);
-            j++;
-        }
-        printf(" *** redirection_list***\n");
-        print_redirection_list(current_token->redirection);
-        current_token = current_token->next;
-        i++;
-    }
+	count = 0;
+	in_token = false;
+	while (*str)
+	{
+		if (*str == ' ')
+		{
+			in_token = false;
+		}
+		else if (!in_token)
+		{
+			in_token = true;
+			count++;
+		}
+		str++;
+	}
+	return (count);
 }
 
-
-void print_redirection_list(t_redirection *redir_list)
+void	*free_and_return_null(void *ptr)
 {
-    t_redirection *current = redir_list;
-    while (current != NULL)
-    {
-        printf("    File_name: %s, Type: %s\n", current->file_name, type_to_string(current->type));
-        current = current->next;
-    }
+	free(ptr);
+	return (NULL);
 }
 
-char *ft_strcat(char *dest, const char *src)
+char	*remove_dollar(char *str)
 {
-    char *dest_end;
+	int		i;
+	int		len;
+	char	*new_str;
+	int		j;
 
-    dest_end = dest;
-    while (*dest_end != '\0')
-        dest_end++;
-    while (*src != '\0')
-    {
-        *dest_end = *src;
-        dest_end++;
-        src++;
-    }
-    *dest_end = '\0';
-    return (dest);
+	i = 0;
+	if (!str)
+		return (NULL);
+	len = strlen(str);
+	new_str = (char *)malloc(len + 1);
+	if (!new_str)
+		return (NULL);
+	j = 0;
+	while (i < len)
+	{
+		if (str[i] != '$')
+		{
+			new_str[j] = str[i];
+			j++;
+		}
+		i++;
+	}
+	new_str[j] = '\0';
+	free(str);
+	return (new_str);
 }
 
-const char *type_to_string(t_type type)
+size_t	ft_strspn(const char *str, const char *accept)
 {
-    switch (type)
-    {
-    case START:
-        return "START";
-    case REDIRECTION_IN:
-        return "REDIRECTION_IN";
-    case REDIRECTION_OUT:
-        return "REDIRECTION_OUT";
-    case APPEND:
-        return "APPEND";
-    case HEREDOC:
-        return "HEREDOC";
-    case SIMPLE_CMD:
-        return "SIMPLE_CMD";
-    case BUILTIN_CMD:
-        return "BUILTIN_CMD";
-    case ARGUMENT:
-        return "ARGUMENT";
-    case FILE_EOF:
-        return "FILE_EOF";
-    default:
-        return "UNKNOWN";
-    }
-}
+	const char	*s;
 
-void *free_and_return_null(void *ptr)
-{
-    free(ptr);
-    return NULL;
-}
-
-
-char *remove_dollar(char *str)
-{
-    int i = 0;
-
-    if (!str)
-        return NULL;
-    int len = strlen(str);
-    char *new_str = (char *)malloc(len + 1);
-    if (!new_str)
-        return NULL;
-    int j = 0;
-    while ( i < len)
-    {
-        if (str[i] != '$')
-        {
-            new_str[j] = str[i];
-            j++;
-        }
-        i++;
-    }
-    new_str[j] = '\0';
-    free(str);
-    return new_str;
+	s = str;
+	while (*s)
+	{
+		const char	*a = accept;
+		bool	found = false;
+		while (*a)
+		{
+			if (*s == *a)
+			{
+				found = true;
+				break ;
+			}
+			a++;
+		}
+		if (!found)
+			break ;
+		s++;
+	}
+	return (s - str);
 }
