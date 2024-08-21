@@ -12,7 +12,7 @@
 
 #include "../minishell.h"
 
-volatile sig_atomic_t g_signal_received = 0;
+volatile sig_atomic_t g_signal_received = 0; // if not global i create a struct for signals
 
 void sig_int(int signal) // ctrl + C
 {

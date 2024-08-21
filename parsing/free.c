@@ -31,31 +31,8 @@ void	ft_free_token_list(t_token *token_list)
 
 void free_prompt(t_prompt *prompt)
 {
-    if (prompt->message)
-	{
-        free(prompt->message);
-        prompt->message = NULL; // Avoid double free
-    }
-    //free(prompt->symbols);
-    //free(prompt->off_symbols);
-    //free(prompt->quotes);
-    //free(prompt->whitespace);
-    if (prompt->curr_dir)
-	{
-        free(prompt->curr_dir);
-        prompt->curr_dir = NULL;
-    }
-    if (prompt->ptr_prompt)
-	{
-        free(prompt->ptr_prompt);
-        prompt->ptr_prompt = NULL;
-    }
-    //	if (prompt->multi_array) {
-    //	    for (int i = 0; prompt->multi_array[i] != NULL; i++) {
-    //	        free(prompt->multi_array[i]);
-    //	    }
-    //	    free(prompt->multi_array);
-    //	}
+    free(prompt->symbols);
+    free(prompt->whitespace);
 }
 
 

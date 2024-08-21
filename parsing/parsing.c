@@ -158,8 +158,9 @@ void minishell_loop(t_prompt *prompt, t_token **token_list, t_data *data)
         message = readline(RED "MINISHELL$$ " RESET);
         if (message == NULL)
         {
-            free(message);
-            return ;
+            // free(message);
+            printf("exit (detected Ctrl + D)\n");
+            break ;
         }
         if(message)
             add_history(message);

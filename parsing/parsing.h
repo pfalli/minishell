@@ -50,7 +50,7 @@ typedef enum e_type
     REDIRECTION_OUT,
     APPEND,
     HEREDOC,
-    SIMPLE_CMD, // command or argument
+    SIMPLE_CMD,
     BUILTIN_CMD,
     ARGUMENT,
     FILE_EOF
@@ -58,16 +58,8 @@ typedef enum e_type
 
 typedef struct s_prompt
 {
-    char *message;
     char *symbols;
-    char *off_symbols;
-    char *quotes;
     char *whitespace;
-    char *curr_dir;
-    int word_count;
-    char *ptr_prompt;
-    char **multi_array;
-    
 }                                   t_prompt;
 
 typedef struct s_redirection
