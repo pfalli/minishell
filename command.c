@@ -51,7 +51,8 @@ int	assign_and_close(int old_fd, int new_fd)
 {
 	if (new_fd > -1)
 	{
-		close(old_fd);
+		if (new_fd > 1)
+			close(old_fd);
 		return (new_fd);
 	}
 	return (old_fd);
@@ -63,7 +64,7 @@ void	wire_files(t_execution *exec, t_redirection *cmdandfile)
 	int				temp_in;
 	int				temp_out;
 
-	current = cmdandfile; 
+	current = cmdandfile;
 	temp_in = 0;
 	temp_out = 1;
 	while (current)
@@ -90,13 +91,12 @@ void	executor(t_token *cmdandfile, t_data *data)
 {
 	t_execution	exec;
 	int			pid;
-	
+	int			status;
 
 	exec.in = 0;
 	exec.out = 1;
 	wire_files(&exec, cmdandfile->redirection);
 	//dup files;
-
 	if (builtin(cmdandfile->multi_command, data) == 1)
 		return ;
 	if (access(cmdandfile->multi_command[0], X_OK) != 0)
@@ -109,23 +109,17 @@ void	executor(t_token *cmdandfile, t_data *data)
 		execve(cmdandfile->multi_command[0], cmdandfile->multi_command, data->envp);
 		exit(0);
 	}
-    // Parent process: wait for the child process and check for SIGINT
-    int status;
-    waitpid(pid, &status, 0);
-    if (g_signal_received == SIGINT_RECEIVED)
-	{
-        g_signal_received = 0;
-	}
-	if (g_signal_received == SIGQUIT_RECEIVED)
-	{
-        g_signal_received = 0;
-	}
+	// Parent process: wait for the child process and check for SIGINT
+	waitpid(pid, &status, 0);
+	if (g_signal_received == SIGINT_RECEIVED
+		|| g_signal_received == SIGQUIT_RECEIVED)
+		g_signal_received = 0;
 	return ;
 }
 
 void	command_processor(t_token *cmdandfile, t_data *data)
 {
-	while(cmdandfile)
+	while (cmdandfile)
 	{
 		executor(cmdandfile, data);
 		cmdandfile = cmdandfile->next;
