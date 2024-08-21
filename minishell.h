@@ -29,6 +29,8 @@ typedef struct s_execution
 {
 	int	in;
 	int	out;
+	int	o_stdin;
+	int	o_stdout;
 	char **cmd;
 }	t_execution;
 

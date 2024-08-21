@@ -74,7 +74,7 @@ void	wire_files(t_execution *exec, t_redirection *cmdandfile)
 		else if (current->type == REDIRECTION_OUT)
 			temp_out = open(current->file_name, O_WRONLY | O_CREAT, 0644);
 		else if (current->type == APPEND)
-			temp_out = open(current->file_name, O_APPEND | O_CREAT, 0644);
+			temp_out = open(current->file_name, 01 | O_APPEND | O_CREAT, 0644);
 		else if (current->type == HEREDOC)
 			temp_in = printf("Heredoc needs to be called here");
 		current = current->next;
@@ -95,8 +95,11 @@ void	executor(t_token *cmdandfile, t_data *data)
 
 	exec.in = 0;
 	exec.out = 1;
+	exec.o_stdin = dup(0);
+	exec.o_stdout = dup(1);
 	wire_files(&exec, cmdandfile->redirection);
-	//dup files;
+	dup2(exec.out, 1);
+	dup2(exec.in, 0);
 	if (builtin(cmdandfile->multi_command, data) == 1)
 		return ;
 	if (access(cmdandfile->multi_command[0], X_OK) != 0)
@@ -111,6 +114,14 @@ void	executor(t_token *cmdandfile, t_data *data)
 	}
 	// Parent process: wait for the child process and check for SIGINT
 	waitpid(pid, &status, 0);
+	dup2(exec.o_stdout, 1);
+	dup2(exec.o_stdin, 0);
+	close(exec.o_stdout);
+	close(exec.o_stdin);
+	if (exec.out != 1)
+		close(exec.out);
+	if (exec.in != 0)
+		close(exec.in);
 	if (g_signal_received == SIGINT_RECEIVED
 		|| g_signal_received == SIGQUIT_RECEIVED)
 		g_signal_received = 0;
