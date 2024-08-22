@@ -33,15 +33,15 @@ void	print_token_details(t_token *token_list)
 				current_token->multi_command[j]);
 			j++;
 		}
-		if (current_token->multi_files == NULL)
-			printf("ERROR MULTI FILE\n");
-		printf("  Files:\n");
-		j = 0;
-		while (j < current_token->file_count)
-		{
-			printf("    File[%d]: %s\n", j, current_token->multi_files[j]);
-			j++;
-		}
+		//if (current_token->multi_files == NULL)
+		//	printf("ERROR MULTI FILE\n");
+		//printf("  Files:\n");
+		//j = 0;
+		//while (j < current_token->file_count)
+		//{
+		//	printf("    File[%d]: %s\n", j, current_token->multi_files[j]);
+		//	j++;
+		//}
 		printf(" *** redirection_list***\n");
 		print_redirection_list(current_token->redirection);
 		current_token = current_token->next;

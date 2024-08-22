@@ -25,7 +25,7 @@ void	ft_free_token_list(t_token *token_list)
 	{
 		free(token_list->value);
 		free_multi_arr(token_list->multi_command);
-		free_multi_arr(token_list->multi_files);
+		//free_multi_arr(token_list->multi_files);
 		token_list_holder = token_list;
 		token_list = token_list->next;
 		free(token_list_holder);

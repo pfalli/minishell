@@ -31,16 +31,12 @@ t_token	*init_multi_arrays(t_token *new, t_prompt *prompt)
 				">>") == 0 || strcmp(word, "<<") == 0)
 			redirection = true;
 		else if (redirection)
-		{
-			new->multi_files[new->file_count++] = strdup(word);
 			redirection = false;
-		}
 		else
 			new->multi_command[new->cmd_count++] = strdup(word);
 		word = ft_strtok_copy(NULL, prompt->whitespace);
 	}
 	new->multi_command[new->cmd_count] = NULL;
-	new->multi_files[new->file_count] = NULL;
 	free(value_copy);
 	return (new);
 }
@@ -121,8 +117,7 @@ bool	initialize_multi_arrays(t_token *new, char *value_copy)
 {
 	new->word_count = count_word(new->value);
 	new->multi_command = malloc(sizeof(char *) * (new->word_count + 1));
-	new->multi_files = malloc(sizeof(char *) * (new->word_count + 1));
-	if (!new->multi_command || !new->multi_files)
+	if (!new->multi_command)
 	{
 		free(value_copy);
 		return (false);
