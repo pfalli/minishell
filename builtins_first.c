@@ -17,15 +17,17 @@ int	mini_cd(char **command, t_data *env)
 	int		status;
 	int		pos;
 	char	*pwd;
+	char	*temp;
 
 	if (!command[1] || ft_strncmp("~", command[1], 2) == 0)
 	{
-		free(command[1]);
-		command[1] = value_finder("HOME=", env->envp);
-		if (command[1] == NULL)
+		temp = value_finder("HOME=", env->envp);
+		if (temp == NULL)
 			return (printf("HOME is not set\n"), 1);
 	}
-	status = chdir(command[1]);
+	else
+		temp = command[1];
+	status = chdir(temp);
 	if (status == -1)
 		return (perror("cd"), 1);
 	if (key_already_present("PWD=", env->envp, &pos))
