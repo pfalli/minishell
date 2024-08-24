@@ -6,7 +6,7 @@
 /*   By: atamas <atamas@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/05 14:53:46 by atamas            #+#    #+#             */
-/*   Updated: 2024/08/12 16:44:18 by atamas           ###   ########.fr       */
+/*   Updated: 2024/08/24 20:43:16 by atamas           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,7 @@ void	close_and_original_fd(t_execution *exec)
 		close(exec->in);
 }
 
-void	executor(t_token *cmdandfile, t_data *data)
+void	executor(t_token *cmdandfile, t_data *data, int in_fd, int out_fd)
 {
 	t_execution	exec;
 	int			pid;
@@ -115,34 +115,78 @@ void	executor(t_token *cmdandfile, t_data *data)
 
 	create_original_fds(&exec);
 	wire_files(&exec, cmdandfile->redirection);
-	dup2(exec.out, 1);
-	dup2(exec.in, 0);
+	if (exec.in != 0)
+	{
+		dup2(exec.in, 0);
+		close(exec.in);
+	}
+	else if (in_fd != -1)
+	{
+		dup2(in_fd, 0);
+		close(in_fd);
+	}
+	if (exec.out != 1)
+	{
+		dup2(exec.out, 1);
+		close(exec.out);
+	}
+	else if (out_fd != 1)
+	{
+		dup2(out_fd, 1);
+		close(out_fd);
+	}
 	if (builtin(cmdandfile->multi_command, data) == 1)
 		return (close_and_original_fd(&exec));
 	if (access(cmdandfile->multi_command[0], X_OK) != 0)
-		command_on_path(cmdandfile->multi_command, data);
+	{
+		if (command_on_path(cmdandfile->multi_command, data) == -1)
+			return (close_and_original_fd(&exec));
+	}
 	pid = fork();
 	if (pid == -1)
+	{
 		perror("fork");
+		exit(1);
+	}
 	else if (pid == 0)
 	{
 		execve(cmdandfile->multi_command[0], cmdandfile->multi_command, data->envp);
-		exit(0);
+		perror(cmdandfile->multi_command[0]);
+		exit(1);
 	}
-	// Parent process: wait for the child process and check for SIGINT
 	waitpid(pid, &status, 0);
 	close_and_original_fd(&exec);
 	if (g_signal_received == SIGINT_RECEIVED
 		|| g_signal_received == SIGQUIT_RECEIVED)
 		g_signal_received = 0;
-	return ;
 }
 
 void	command_processor(t_token *cmdandfile, t_data *data)
 {
+	int	fds[2];
+	int	original[2];
+	int	prev_fd;
+
+	prev_fd = -1;
+	original[0] = dup(0);
+	original[1] = dup(1);
 	while (cmdandfile)
 	{
-		executor(cmdandfile, data);
+		if (cmdandfile->next)
+		{
+			pipe(fds);
+			executor(cmdandfile, data, prev_fd, fds[1]);
+			close(fds[1]);
+		}
+		else
+			executor(cmdandfile, data, prev_fd, original[1]);
+		if (prev_fd != -1)
+			close(prev_fd);
+		prev_fd = fds[0];
 		cmdandfile = cmdandfile->next;
 	}
+	dup2(original[0], 0);
+	dup2(original[1], 1);
+	close(original[0]);
+	close(original[1]);
 }
