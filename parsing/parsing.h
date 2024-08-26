@@ -143,7 +143,7 @@ void init_list_nodes(t_token **head, t_token **current, t_token **new);
 void	sig_int(int signal);
 void	sig_quit(int signal);
 void	sig_int_in_process(int signal);
-void	set_signals(sig_t *old_signal);
-void	restore_signals(sig_t *old_signal);
+void	set_signals(void (*old_signal[2])(int));
+void	restore_signals(void (*old_signal[2])(int));
 
 #endif

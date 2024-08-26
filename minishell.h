@@ -23,6 +23,7 @@ typedef struct s_data
 {
 	char	**envp;
 	char	**path;
+	int		exit_status;
 }	t_data;
 
 typedef struct s_execution

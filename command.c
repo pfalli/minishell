@@ -113,7 +113,7 @@ void	executor(t_token *cmdandfile, t_data *data)
 	t_execution	exec;
 	int			pid;
 	int			status;
-	sig_t		old_signal[2];
+	void (*old_signal[2])(int);
 
 	create_original_fds(&exec);
 	wire_files(&exec, cmdandfile->redirection);

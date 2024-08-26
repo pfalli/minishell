@@ -35,13 +35,13 @@ void	sig_quit(int signal) // ctrl + '\' QUit
 	printf("Quit\n");
 }
 
-void set_signals(sig_t *old_signal)
+void set_signals(void (*old_signal[2])(int))
 {
     old_signal[0] = signal(SIGINT, sig_int_in_process);
     old_signal[1] = signal(SIGQUIT, sig_quit);
 }
 
-void restore_signals(sig_t *old_signal)
+void restore_signals(void (*old_signal[2])(int))
 {
     signal(SIGINT, old_signal[0]);
     signal(SIGQUIT, old_signal[1]);
