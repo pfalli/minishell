@@ -12,14 +12,6 @@
 
 #include "minishell.h"
 
-char	*command_is_executable(char *joined_command)
-{
-	if (access(joined_command, X_OK) == 0)
-		return (joined_command);
-	else
-		return (perror(joined_command), free(joined_command), NULL);
-}
-
 int	command_on_path(char **executable, t_data *data)
 {
 	char	*command_with_slash;
@@ -45,17 +37,6 @@ int	command_on_path(char **executable, t_data *data)
 		i++;
 	}
 	return (0);
-}
-
-int	assign_and_close(int old_fd, int new_fd)
-{
-	if (new_fd > -1)
-	{
-		if (old_fd > 1)
-			close(old_fd);
-		return (new_fd);
-	}
-	return (old_fd);
 }
 
 void	wire_files(t_execution *exec, t_redirection *cmdandfile)
@@ -85,26 +66,6 @@ void	wire_files(t_execution *exec, t_redirection *cmdandfile)
 		if (temp_out > -1)
 			exec->out = assign_and_close(exec->out, temp_out);
 	}
-}
-
-void	create_original_fds(t_execution *exec)
-{
-	exec->in = 0;
-	exec->out = 1;
-	exec->o_stdin = dup(0);
-	exec->o_stdout = dup(1);
-}
-
-void	close_and_original_fd(t_execution *exec)
-{
-	dup2(exec->o_stdout, 1);
-	dup2(exec->o_stdin, 0);
-	close(exec->o_stdout);
-	close(exec->o_stdin);
-	if (exec->out != 1)
-		close(exec->out);
-	if (exec->in != 0)
-		close(exec->in);
 }
 
 void	handle_input_output(t_execution *exec, int *in, int *out)
@@ -164,20 +125,6 @@ void	executor(t_token *cmdandfile, t_data *data, int in_fd, int out_fd)
 	if (out_fd != -1)
 		close(out_fd);
 	close_and_original_fd(&exec);
-}
-
-void	wait_and_restore(int original[2])
-{
-	int	pid;
-
-	pid = wait(NULL);
-	while (pid > 0)
-		pid = wait(NULL);
-	dup2(original[0], 0);
-	dup2(original[1], 1);
-	close(original[0]);
-	close(original[1]);
-
 }
 
 void	command_processor(t_token *cmdandfile, t_data *data)
