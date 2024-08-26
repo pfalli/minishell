@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include <signal.h>
 
 char	*command_is_executable(char *joined_command)
 {
@@ -112,7 +113,7 @@ void	executor(t_token *cmdandfile, t_data *data)
 	t_execution	exec;
 	int			pid;
 	int			status;
-	sig_t	old_signal[2];
+	sig_t		old_signal[2];
 
 	create_original_fds(&exec);
 	wire_files(&exec, cmdandfile->redirection);

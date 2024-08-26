@@ -12,6 +12,23 @@
 
 #include "../minishell.h"
 
+int if_only_spaces(const char *str)
+{
+    while (*str) {
+        if (*str != ' ')
+            return 0;
+        str++;
+    }
+    return 1;
+}
+
+void init_list_nodes(t_token **head, t_token **current, t_token **new)
+{
+    *head = NULL;
+    *current = NULL;
+    *new = NULL;
+}
+
 char	*expand_message(char *message, t_data *data)
 {
 	char	*expanded_message;

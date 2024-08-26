@@ -81,5 +81,7 @@ int	builtin(char **command, t_data *env)
 		return (mini_echo(command + 1));
 	if (ft_strncmp(command[0], "env", 3) == 0)
 		return (print_env(env->envp, 0));
+	if (ft_strncmp(command[0], "exit",  ft_strlen(command[0])) == 0)
+		exit(0);
 	return (0);
 }

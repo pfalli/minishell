@@ -42,11 +42,9 @@ void	minishell_loop(t_prompt *prompt, t_token **token_list, t_data *data)
 		message = readline(RED "MINISHELL$$ " RESET);
 		if (message == NULL)
 		{
-			printf("exitt (detected Ctrl + D)\n");
+			printf("exit\n");
 			break ;
 		}
-		//if (g_signal_received)
-		//	g_signal_received = 0;
 		signal(SIGINT, sig_int);
 		signal(SIGQUIT, SIG_IGN);
 		if (message)

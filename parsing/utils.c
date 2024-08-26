@@ -68,7 +68,7 @@ char	*remove_dollar(char *str)
 	i = 0;
 	if (!str)
 		return (NULL);
-	len = strlen(str);
+	len = ft_strlen(str);
 	new_str = (char *)malloc(len + 1);
 	if (!new_str)
 		return (NULL);

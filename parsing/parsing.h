@@ -13,29 +13,28 @@
 #ifndef PARSING_H
 # define PARSING_H
 
-typedef struct s_token	t_token;
-typedef struct s_data	t_data;
-
 # define RED "\x1b[31m"
 # define RESET "\x1b[0m"
 
 # include "../42_libft/libft.h"
-# include <dirent.h> // opendir
-# include <errno.h>  // errno
-# include <fcntl.h>  // open
+# include <dirent.h>
+# include <errno.h>
+# include <fcntl.h>
 # include <readline/history.h>
 # include <readline/readline.h>
-# include <signal.h> // signal, kill
+# include <signal.h>
 # include <stdbool.h>
 # include <stdio.h>
 # include <stdlib.h>
-# include <string.h> // strerror
+# include <string.h>
 # include <sys/stat.h>
 # include <sys/wait.h>
-# include <term.h> // termcap
+# include <term.h>
 # include <unistd.h>
-# include <wait.h> // wait, waitpid
+# include <wait.h>
 
+typedef struct s_token	t_token;
+typedef struct s_data	t_data;
 
 # define SIGINT_RECEIVED 1
 # define SIGQUIT_RECEIVED 2
@@ -137,11 +136,14 @@ char	*expand_message(char *message, t_data *data);
 char	*get_env_value(const char *var_name, t_data *env);
 bool	single_quote(const char *str);
 
+int if_only_spaces(const char *str);
+void init_list_nodes(t_token **head, t_token **current, t_token **new);
+
 // ** signals ** //
 void	sig_int(int signal);
 void	sig_quit(int signal);
 void	sig_int_in_process(int signal);
-void 	set_signals(sig_t *old_signal);
-void 	restore_signals(sig_t *old_signal);
+void	set_signals(sig_t *old_signal);
+void	restore_signals(sig_t *old_signal);
 
 #endif

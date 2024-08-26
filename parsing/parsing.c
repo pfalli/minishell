@@ -48,18 +48,17 @@ t_token	*create_linked_list(t_prompt *prompt, char *message)
 	t_token	*current;
 	char	*save_prompt_message;
 	char	*token;
-	head = NULL;
-	new = NULL;
-	current = NULL;
+
 	save_prompt_message = strdup(message);
 	token = ft_strtok(save_prompt_message, "|");
+	init_list_nodes(&head, &current, &new);
 	while (token != NULL)
 	{
 		new = create_token(token);
 		if (new == NULL)
 		{
 			ft_free_token_list(new);
-			return (NULL);
+			return NULL;
 		}
 		append_node(&head, &current, new);
 		init_multi_arrays(new, prompt);
