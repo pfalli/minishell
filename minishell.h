@@ -13,7 +13,7 @@
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
-#include "parsing/parsing.h"
+# include "parsing/parsing.h"
 # include <stdlib.h>
 # include <stdio.h>
 # include <unistd.h>

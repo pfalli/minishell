@@ -65,7 +65,7 @@ int	main(int argc, char *argv[], char **envp)
 	if (init_env(envp, &env) || init_path(&env))
 		return (0);
 	signal(SIGINT, sig_int);
-	signal(SIGQUIT, sig_quit);
+	signal(SIGQUIT, SIG_IGN);
     init_prompt(&prompt);
     minishell_loop(&prompt, &token_list, &env);
 	free_multi(env.path);

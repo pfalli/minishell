@@ -13,6 +13,9 @@
 #ifndef PARSING_H
 # define PARSING_H
 
+typedef struct s_token	t_token;
+typedef struct s_data	t_data;
+
 # define RED "\x1b[31m"
 # define RESET "\x1b[0m"
 
@@ -33,13 +36,9 @@
 # include <unistd.h>
 # include <wait.h> // wait, waitpid
 
-extern volatile sig_atomic_t	g_signal_received;
 
 # define SIGINT_RECEIVED 1
 # define SIGQUIT_RECEIVED 2
-
-typedef struct s_token	t_token;
-typedef struct s_data	t_data;
 
 //****TOKEN_LIST STRUCT****
 
@@ -141,5 +140,8 @@ bool	single_quote(const char *str);
 // ** signals ** //
 void	sig_int(int signal);
 void	sig_quit(int signal);
+void	sig_int_in_process(int signal);
+void 	set_signals(sig_t *old_signal);
+void 	restore_signals(sig_t *old_signal);
 
 #endif

@@ -112,6 +112,7 @@ void	executor(t_token *cmdandfile, t_data *data)
 	t_execution	exec;
 	int			pid;
 	int			status;
+	sig_t	old_signal[2];
 
 	create_original_fds(&exec);
 	wire_files(&exec, cmdandfile->redirection);
@@ -121,6 +122,7 @@ void	executor(t_token *cmdandfile, t_data *data)
 		return (close_and_original_fd(&exec));
 	if (access(cmdandfile->multi_command[0], X_OK) != 0)
 		command_on_path(cmdandfile->multi_command, data);
+	set_signals(old_signal);
 	pid = fork();
 	if (pid == -1)
 		perror("fork");
@@ -129,12 +131,9 @@ void	executor(t_token *cmdandfile, t_data *data)
 		execve(cmdandfile->multi_command[0], cmdandfile->multi_command, data->envp);
 		exit(0);
 	}
-	// Parent process: wait for the child process and check for SIGINT
 	waitpid(pid, &status, 0);
 	close_and_original_fd(&exec);
-	if (g_signal_received == SIGINT_RECEIVED
-		|| g_signal_received == SIGQUIT_RECEIVED)
-		g_signal_received = 0;
+	restore_signals(old_signal);
 	return ;
 }
 

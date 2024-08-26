@@ -39,17 +39,16 @@ void	minishell_loop(t_prompt *prompt, t_token **token_list, t_data *data)
 
 	while (1)
 	{
-		if (g_signal_received)
-		{
-			g_signal_received = 0;
-			continue ;
-		}
 		message = readline(RED "MINISHELL$$ " RESET);
 		if (message == NULL)
 		{
 			printf("exitt (detected Ctrl + D)\n");
 			break ;
 		}
+		//if (g_signal_received)
+		//	g_signal_received = 0;
+		signal(SIGINT, sig_int);
+		signal(SIGQUIT, SIG_IGN);
 		if (message)
 			add_history(message);
 		message = expand_message(message, data);
