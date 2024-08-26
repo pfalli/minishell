@@ -107,41 +107,41 @@ void	close_and_original_fd(t_execution *exec)
 		close(exec->in);
 }
 
+void	handle_input_output(t_execution *exec, int *in, int *out)
+{
+	if (exec->in != 0)
+	{
+		dup2(exec->in, 0);
+		close(exec->in);
+	}
+	else if (*in != -1)
+	{
+		dup2(*in, 0);
+		close(*in);
+	}
+	if (exec->out != 1)
+	{
+		dup2(exec->out, 1);
+		close(exec->out);
+	}
+	else if (*out != 1)
+	{
+		dup2(*out, 1);
+		close(*out);
+	}
+}
+
 void	executor(t_token *cmdandfile, t_data *data, int in_fd, int out_fd)
 {
 	t_execution	exec;
 	int			pid;
-	int			status;
 
 	create_original_fds(&exec);
 	wire_files(&exec, cmdandfile->redirection);
-	if (exec.in != 0)
-	{
-		dup2(exec.in, 0);
-		close(exec.in);
-	}
-	else if (in_fd != -1)
-	{
-		dup2(in_fd, 0);
-		close(in_fd);
-	}
-	if (exec.out != 1)
-	{
-		dup2(exec.out, 1);
-		close(exec.out);
-	}
-	else if (out_fd != 1)
-	{
-		dup2(out_fd, 1);
-		close(out_fd);
-	}
-	if (builtin(cmdandfile->multi_command, data) == 1)
+	handle_input_output(&exec, &in_fd, &out_fd);
+	if (cmdandfile->next == NULL
+		&& builtin(cmdandfile->multi_command, data) == 1)
 		return (close_and_original_fd(&exec));
-	if (access(cmdandfile->multi_command[0], X_OK) != 0)
-	{
-		if (command_on_path(cmdandfile->multi_command, data) == -1)
-			return (close_and_original_fd(&exec));
-	}
 	pid = fork();
 	if (pid == -1)
 	{
@@ -150,22 +150,41 @@ void	executor(t_token *cmdandfile, t_data *data, int in_fd, int out_fd)
 	}
 	else if (pid == 0)
 	{
-		execve(cmdandfile->multi_command[0], cmdandfile->multi_command, data->envp);
-		perror(cmdandfile->multi_command[0]);
-		exit(1);
+		if (builtin(cmdandfile->multi_command, data) == 0)
+		{
+			command_on_path(cmdandfile->multi_command, data);
+			execve(cmdandfile->multi_command[0], cmdandfile->multi_command, data->envp);
+			perror(cmdandfile->multi_command[0]);
+			exit(1);
+		}
+		exit(0);
 	}
-	waitpid(pid, &status, 0);
+	if (in_fd != -1)
+		close(in_fd);
+	if (out_fd != -1)
+		close(out_fd);
 	close_and_original_fd(&exec);
-	if (g_signal_received == SIGINT_RECEIVED
-		|| g_signal_received == SIGQUIT_RECEIVED)
-		g_signal_received = 0;
+}
+
+void	wait_and_restore(int original[2])
+{
+	int	pid;
+
+	pid = wait(NULL);
+	while (pid > 0)
+		pid = wait(NULL);
+	dup2(original[0], 0);
+	dup2(original[1], 1);
+	close(original[0]);
+	close(original[1]);
+
 }
 
 void	command_processor(t_token *cmdandfile, t_data *data)
 {
 	int	fds[2];
-	int	original[2];
 	int	prev_fd;
+	int	original[2];
 
 	prev_fd = -1;
 	original[0] = dup(0);
@@ -174,7 +193,11 @@ void	command_processor(t_token *cmdandfile, t_data *data)
 	{
 		if (cmdandfile->next)
 		{
-			pipe(fds);
+			if (pipe(fds) == -1)
+			{
+				perror("pipe");
+				exit(1);
+			}
 			executor(cmdandfile, data, prev_fd, fds[1]);
 			close(fds[1]);
 		}
@@ -185,8 +208,5 @@ void	command_processor(t_token *cmdandfile, t_data *data)
 		prev_fd = fds[0];
 		cmdandfile = cmdandfile->next;
 	}
-	dup2(original[0], 0);
-	dup2(original[1], 1);
-	close(original[0]);
-	close(original[1]);
+	wait_and_restore(original);
 }
