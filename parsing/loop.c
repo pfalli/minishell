@@ -51,7 +51,7 @@ void	minishell_loop(t_prompt *prompt, t_token **token_list, t_data *data)
 			add_history(message);
 		message = expand_message(message, data);
 		*token_list = create_linked_list(prompt, message);
-		print_token_details(*token_list);
+		//print_token_details(*token_list);
 		command_processor(*token_list, data);
 		if (message)
 			free(message);
