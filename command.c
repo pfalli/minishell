@@ -37,7 +37,7 @@ int	command_on_path(char **executable, t_data *data)
 		free(joined_command);
 		i++;
 	}
-	return (0);
+	return (free(command_with_slash), 0);
 }
 
 void	wire_files(t_execution *exec, t_redirection *cmdandfile)
@@ -114,6 +114,7 @@ int	executor(t_token *cmdandfile, t_data *data, int in_fd, int out_fd)
 	{
 		execve(cmdandfile->multi_command[0], cmdandfile->multi_command, data->envp);
 		printf("command not found: %s\n", cmdandfile->multi_command[0]);
+		free_multi(cmdandfile->multi_command);
 		exit(127);
 	}
 	if (in_fd != -1)
