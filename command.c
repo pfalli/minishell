@@ -100,25 +100,17 @@ void	executor(t_token *cmdandfile, t_data *data, int in_fd, int out_fd)
 	create_original_fds(&exec);
 	wire_files(&exec, cmdandfile->redirection);
 	handle_input_output(&exec, &in_fd, &out_fd);
-	if (cmdandfile->next == NULL
-		&& builtin(cmdandfile->multi_command, data) == 1)
+	if (builtin(cmdandfile->multi_command, data) == 1)
 		return (close_and_original_fd(&exec));
 	pid = fork();
 	if (pid == -1)
-	{
-		perror("fork");
-		exit(1);
-	}
+		error("fork", NULL);
 	else if (pid == 0)
 	{
-		if (builtin(cmdandfile->multi_command, data) == 0)
-		{
-			command_on_path(cmdandfile->multi_command, data);
-			execve(cmdandfile->multi_command[0], cmdandfile->multi_command, data->envp);
-			perror(cmdandfile->multi_command[0]);
-			exit(1);
-		}
-		exit(0);
+		command_on_path(cmdandfile->multi_command, data);
+		execve(cmdandfile->multi_command[0], cmdandfile->multi_command, data->envp);
+		printf("command not found: %s\n", cmdandfile->multi_command[0]);
+		exit(1);
 	}
 	if (in_fd != -1)
 		close(in_fd);
@@ -141,10 +133,7 @@ void	command_processor(t_token *cmdandfile, t_data *data)
 		if (cmdandfile->next)
 		{
 			if (pipe(fds) == -1)
-			{
-				perror("pipe");
-				exit(1);
-			}
+				error("pipe", NULL);
 			executor(cmdandfile, data, prev_fd, fds[1]);
 			close(fds[1]);
 		}
