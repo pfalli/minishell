@@ -6,20 +6,12 @@
 /*   By: atamas <atamas@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/05 14:53:46 by atamas            #+#    #+#             */
-/*   Updated: 2024/08/12 16:44:18 by atamas           ###   ########.fr       */
+/*   Updated: 2024/08/24 20:43:16 by atamas           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include <signal.h>
-
-char	*command_is_executable(char *joined_command)
-{
-	if (access(joined_command, X_OK) == 0)
-		return (joined_command);
-	else
-		return (perror(joined_command), free(joined_command), NULL);
-}
 
 int	command_on_path(char **executable, t_data *data)
 {
@@ -46,17 +38,6 @@ int	command_on_path(char **executable, t_data *data)
 		i++;
 	}
 	return (0);
-}
-
-int	assign_and_close(int old_fd, int new_fd)
-{
-	if (new_fd > -1)
-	{
-		if (old_fd > 1)
-			close(old_fd);
-		return (new_fd);
-	}
-	return (old_fd);
 }
 
 void	wire_files(t_execution *exec, t_redirection *cmdandfile)
@@ -88,27 +69,31 @@ void	wire_files(t_execution *exec, t_redirection *cmdandfile)
 	}
 }
 
-void	create_original_fds(t_execution *exec)
+void	handle_input_output(t_execution *exec, int *in, int *out)
 {
-	exec->in = 0;
-	exec->out = 1;
-	exec->o_stdin = dup(0);
-	exec->o_stdout = dup(1);
-}
-
-void	close_and_original_fd(t_execution *exec)
-{
-	dup2(exec->o_stdout, 1);
-	dup2(exec->o_stdin, 0);
-	close(exec->o_stdout);
-	close(exec->o_stdin);
-	if (exec->out != 1)
-		close(exec->out);
 	if (exec->in != 0)
+	{
+		dup2(exec->in, 0);
 		close(exec->in);
+	}
+	else if (*in != -1)
+	{
+		dup2(*in, 0);
+		close(*in);
+	}
+	if (exec->out != 1)
+	{
+		dup2(exec->out, 1);
+		close(exec->out);
+	}
+	else if (*out != 1)
+	{
+		dup2(*out, 1);
+		close(*out);
+	}
 }
 
-void	executor(t_token *cmdandfile, t_data *data)
+void	executor(t_token *cmdandfile, t_data *data, int in_fd, int out_fd)
 {
 	t_execution	exec;
 	int			pid;
@@ -117,8 +102,7 @@ void	executor(t_token *cmdandfile, t_data *data)
 
 	create_original_fds(&exec);
 	wire_files(&exec, cmdandfile->redirection);
-	dup2(exec.out, 1);
-	dup2(exec.in, 0);
+	handle_input_output(&exec, &in_fd, &out_fd);
 	if (builtin(cmdandfile->multi_command, data) == 1)
 		return (close_and_original_fd(&exec));
 	if (access(cmdandfile->multi_command[0], X_OK) != 0)
@@ -126,23 +110,46 @@ void	executor(t_token *cmdandfile, t_data *data)
 	set_signals(old_signal);
 	pid = fork();
 	if (pid == -1)
-		perror("fork");
+		error("fork", NULL);
 	else if (pid == 0)
 	{
 		execve(cmdandfile->multi_command[0], cmdandfile->multi_command, data->envp);
-		exit(0);
+		printf("command not found: %s\n", cmdandfile->multi_command[0]);
+		exit(1);
 	}
 	waitpid(pid, &status, 0);
 	close_and_original_fd(&exec);
 	restore_signals(old_signal);
-	return ;
+	if (in_fd != -1)
+		close(in_fd);
+	if (out_fd != -1)
+		close(out_fd);
 }
 
 void	command_processor(t_token *cmdandfile, t_data *data)
 {
+	int	fds[2];
+	int	prev_fd;
+	int	original[2];
+
+	prev_fd = -1;
+	original[0] = dup(0);
+	original[1] = dup(1);
 	while (cmdandfile)
 	{
-		executor(cmdandfile, data);
+		if (cmdandfile->next)
+		{
+			if (pipe(fds) == -1)
+				error("pipe", NULL);
+			executor(cmdandfile, data, prev_fd, fds[1]);
+			close(fds[1]);
+		}
+		else
+			executor(cmdandfile, data, prev_fd, original[1]);
+		if (prev_fd != -1)
+			close(prev_fd);
+		prev_fd = fds[0];
 		cmdandfile = cmdandfile->next;
 	}
+	wait_and_restore(original);
 }

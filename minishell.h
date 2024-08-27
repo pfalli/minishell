@@ -28,11 +28,11 @@ typedef struct s_data
 
 typedef struct s_execution
 {
-	int	in;
-	int	out;
-	int	o_stdin;
-	int	o_stdout;
-	char **cmd;
+	int		in;
+	int		out;
+	int		o_stdin;
+	int		o_stdout;
+	char	**cmd;
 }	t_execution;
 
 void	free_multi(char **array);
@@ -50,10 +50,17 @@ int		init_env(char **envp, t_data *env);
 int		builtin(char **command, t_data *env);
 int		mini_export(char **command, t_data *env);
 char	**mini_unset(char **command, t_data *env);
-int	print_env(char **multidimensional, int sort);
+int		print_env(char **multidimensional, int sort);
 char	*key_extractor(char *text);
 char	*value_finder(char *key, char **multidimensional);
 char	*export_key(char *src);
 int		command_on_path(char **executable, t_data *data);
 void	command_processor(t_token *cmdandfile, t_data *data);
+void	wait_and_restore(int original[2]);
+void	close_and_original_fd(t_execution *exec);
+void	create_original_fds(t_execution *exec);
+int		assign_and_close(int old_fd, int new_fd);
+char	*command_is_executable(char *joined_command);
+void	error(char *str, char *errormsg);
+
 #endif
