@@ -93,7 +93,7 @@ void	handle_input_output(t_execution *exec, int *in, int *out)
 	}
 }
 
-void	executor(t_token *cmdandfile, t_data *data, int in_fd, int out_fd)
+int	executor(t_token *cmdandfile, t_data *data, int in_fd, int out_fd)
 {
 	t_execution	exec;
 	int			pid;
@@ -103,7 +103,7 @@ void	executor(t_token *cmdandfile, t_data *data, int in_fd, int out_fd)
 	wire_files(&exec, cmdandfile->redirection);
 	handle_input_output(&exec, &in_fd, &out_fd);
 	if (builtin(cmdandfile->multi_command, data) == 1)
-		return (close_and_original_fd(&exec));
+		return (close_and_original_fd(&exec), 0);
 	if (access(cmdandfile->multi_command[0], X_OK) != 0)
 		command_on_path(cmdandfile->multi_command, data);
 	set_signals(old_signal);
@@ -114,14 +114,13 @@ void	executor(t_token *cmdandfile, t_data *data, int in_fd, int out_fd)
 	{
 		execve(cmdandfile->multi_command[0], cmdandfile->multi_command, data->envp);
 		printf("command not found: %s\n", cmdandfile->multi_command[0]);
-		exit(1);
+		exit(127);
 	}
-	close_and_original_fd(&exec);
-	restore_signals(old_signal);
 	if (in_fd != -1)
 		close(in_fd);
 	if (out_fd != -1)
 		close(out_fd);
+	return (close_and_original_fd(&exec), restore_signals(old_signal), pid);
 }
 
 void	command_processor(t_token *cmdandfile, t_data *data)
@@ -129,6 +128,7 @@ void	command_processor(t_token *cmdandfile, t_data *data)
 	int	fds[2];
 	int	prev_fd;
 	int	original[2];
+	int	last_pid;
 
 	prev_fd = -1;
 	original[0] = dup(0);
@@ -143,11 +143,11 @@ void	command_processor(t_token *cmdandfile, t_data *data)
 			close(fds[1]);
 		}
 		else
-			executor(cmdandfile, data, prev_fd, original[1]);
+			last_pid = executor(cmdandfile, data, prev_fd, original[1]);
 		if (prev_fd != -1)
 			close(prev_fd);
 		prev_fd = fds[0];
 		cmdandfile = cmdandfile->next;
 	}
-	wait_and_restore(original);
+	wait_and_restore(original, last_pid, data);
 }

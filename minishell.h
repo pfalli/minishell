@@ -18,6 +18,8 @@
 # include <stdio.h>
 # include <unistd.h>
 # include "42_libft/libft.h"
+#include <sys/wait.h>
+#include <sys/types.h>
 
 typedef struct s_data
 {
@@ -56,7 +58,7 @@ char	*value_finder(char *key, char **multidimensional);
 char	*export_key(char *src);
 int		command_on_path(char **executable, t_data *data);
 void	command_processor(t_token *cmdandfile, t_data *data);
-void	wait_and_restore(int original[2]);
+void	wait_and_restore(int original[2], int last_pid, t_data *data);
 void	close_and_original_fd(t_execution *exec);
 void	create_original_fds(t_execution *exec);
 int		assign_and_close(int old_fd, int new_fd);

@@ -6,7 +6,7 @@
 /*   By: atamas <atamas@student.42wolfsburg.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 16:31:26 by atamas            #+#    #+#             */
-/*   Updated: 2024/08/26 16:33:17 by atamas           ###   ########.fr       */
+/*   Updated: 2024/08/27 16:35:10 by atamas           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,13 +51,22 @@ void	close_and_original_fd(t_execution *exec)
 		close(exec->in);
 }
 
-void	wait_and_restore(int original[2])
+void	wait_and_restore(int original[2], int last_pid, t_data *data)
 {
 	int	pid;
+	int	status;
 
-	pid = wait(NULL);
+	status = -1;
+	pid = wait(&status);
 	while (pid > 0)
-		pid = wait(NULL);
+	{
+		if (pid == last_pid)
+		{
+			if (WIFEXITED(status))
+				data->exit_status = WEXITSTATUS(status);
+		}
+		pid = wait(&status);
+	}
 	dup2(original[0], 0);
 	dup2(original[1], 1);
 	close(original[0]);

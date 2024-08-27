@@ -80,6 +80,7 @@ int	init_env(char **envp, t_data *env)
 	int	j;
 
 	j = 0;
+	env->exit_status = 0;
 	env->envp = NULL;
 	if (envp == NULL || envp[0] == NULL)
 		return (set_default_env(env), 0);
