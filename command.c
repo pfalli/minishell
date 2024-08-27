@@ -97,7 +97,6 @@ void	executor(t_token *cmdandfile, t_data *data, int in_fd, int out_fd)
 {
 	t_execution	exec;
 	int			pid;
-	int			status;
 	void (*old_signal[2])(int);
 
 	create_original_fds(&exec);
@@ -117,7 +116,6 @@ void	executor(t_token *cmdandfile, t_data *data, int in_fd, int out_fd)
 		printf("command not found: %s\n", cmdandfile->multi_command[0]);
 		exit(1);
 	}
-	waitpid(pid, &status, 0);
 	close_and_original_fd(&exec);
 	restore_signals(old_signal);
 	if (in_fd != -1)
