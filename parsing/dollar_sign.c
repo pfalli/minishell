@@ -47,11 +47,19 @@ char	*replace_var_with_value(const char *str, const char *var_value,
 char *replace_with_exit_status(char *str, int *i, t_data *data)
 {
     char *var_value;
+    char *new_str;
 
     if (str[*i] == '?' && str[*i - 1] == '$')
     {
         var_value = ft_itoa(data->exit_status);
-        return (var_value);
+        if (!var_value)
+            return (str);
+        new_str = replace_var_with_value(str, var_value, *i + 1, 2);
+        free(var_value);
+        if (!new_str)
+            return (str);
+        free(str);
+        return (new_str);
     }
     return (str);
 }
