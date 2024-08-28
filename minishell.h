@@ -52,7 +52,7 @@ int		init_env(char **envp, t_data *env);
 int		builtin(char **command, t_data *env);
 int		mini_export(char **command, t_data *env);
 char	**mini_unset(char **command, t_data *env);
-int		print_env(char **multidimensional, int sort);
+int		print_env(char **multidimensional, int sort, char **command);
 char	*key_extractor(char *text);
 char	*value_finder(char *key, char **multidimensional);
 char	*export_key(char *src);

@@ -92,6 +92,8 @@ int	builtin(char **command, t_data *env)
 		return (-1);
 	if (ft_strncmp(command[0], "pwd", ft_strlen(command[0])) == 0)
 	{
+		if (command[1])
+			return (printf("pwd: too many arguments\n"), 1);
 		pwd = getcwd(NULL, 0);
 		return (printf("%s\n", pwd), free(pwd), env->exit_status = 0, 1);
 	}
@@ -104,7 +106,7 @@ int	builtin(char **command, t_data *env)
 	if (ft_strncmp(command[0], "echo", ft_strlen(command[0])) == 0)
 		return (env->exit_status = 0, mini_echo(command));
 	if (ft_strncmp(command[0], "env", ft_strlen(command[0])) == 0)
-		return (env->exit_status = 0, print_env(env->envp, 0));
+		return (env->exit_status = 0, print_env(env->envp, 0, command));
 	if (ft_strncmp(command[0], "exit", ft_strlen(command[0])) == 0)
 		exit(0);
 	return (0);
