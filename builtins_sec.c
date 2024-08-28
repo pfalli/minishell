@@ -49,9 +49,13 @@ char	*export_key(char *src)
 	i = 0;
 	while (src[i] && src[i] != '=')
 		i++;
-	if (src[i] != '=' || i == 0)
+	if (i == 0)
 		return (NULL);
+	if (ft_strchr(src, '='))
+		i++;
 	key = malloc(sizeof(char) * (i + 2));
+	if (key == NULL)
+		return (NULL);
 	ft_strlcpy(key, src, i + 2);
 	return (key);
 }
@@ -107,7 +111,7 @@ int	print_env(char **multidimensional, int sort)
 		sorted[0] = NULL;
 		copy_multi_from(multidimensional, sorted, 0, size + 1);
 		bubblesort(sorted, size);
-		while (sorted[i] && sorted[i + 1])
+		while (sorted[i])
 			printf("declare -x %s\n", sorted[i++]);
 		return (free(sorted), 1);
 	}
