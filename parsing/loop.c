@@ -53,7 +53,7 @@ void	minishell_loop(t_prompt *prompt, t_token **token_list, t_data *data)
 		*token_list = create_linked_list(prompt, message);
 		//print_token_details(*token_list);
 		command_processor(*token_list, data);
-		printf("exit stat %d\n", data->exit_status);
+		//printf("exit stat %d\n", data->exit_status);
 		if (message)
 			free(message);
 		ft_free_token_list(*token_list);
