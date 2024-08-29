@@ -12,7 +12,7 @@
 
 #include "../minishell.h"
 
-t_token	*init_multi_arrays(t_token *new, t_prompt *prompt)
+t_token	*init_multi_command(t_token *new, t_prompt *prompt)
 {
 	char	*value_copy;
 	char	*word;
@@ -27,8 +27,8 @@ t_token	*init_multi_arrays(t_token *new, t_prompt *prompt)
 	word = ft_strtok_copy(value_copy, prompt->whitespace);
 	while (word != NULL)
 	{
-		if (strcmp(word, ">") == 0 || strcmp(word, "<") == 0 || strcmp(word,
-				">>") == 0 || strcmp(word, "<<") == 0)
+		printf("word: %s\n", word);
+		if (is_redirection_operator(word))
 			redirection = true;
 		else if (redirection)
 			redirection = false;
@@ -61,7 +61,7 @@ t_token	*create_linked_list(t_prompt *prompt, char *message)
 			return NULL;
 		}
 		append_node(&head, &current, new);
-		init_multi_arrays(new, prompt);
+		init_multi_command(new, prompt);
 		create_redirection_list(new, prompt, token);
 		token = ft_strtok(NULL, "|");
 	}

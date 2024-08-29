@@ -53,22 +53,33 @@ bool is_redirection_operator(const char *word)
 void process_redirection(t_redirection **redir_head, t_redirection **redir_current, 
                          char *word, t_type type)
 {
-    t_redirection *new_redir = create_redirection_node(word, type);
+    t_redirection *new_redir;
+
+	new_redir = create_redirection_node(word, type);
     append_redirection_node(redir_head, redir_current, new_redir);
 }
 
-t_redirection *create_redirection_list(t_token *new, t_prompt *prompt, char *message) {
-    t_redirection *redir_head = NULL;
-    t_redirection *redir_current = NULL;
-    char *word = ft_strtok_copy(message, prompt->whitespace);
-    bool redirection = false;
+t_redirection *create_redirection_list(t_token *new, t_prompt *prompt, char *message)
+{
+    t_redirection *redir_head;
+    t_redirection *redir_current;
+    char *word;
+    bool redirection;
     t_type type;
 
-    while (word != NULL) {
-        if (is_redirection_operator(word)) {
+	redirection = false;
+	redir_head = NULL;
+	redir_current = NULL;
+	word = ft_strtok_copy(message, prompt->whitespace);
+    while (word != NULL)
+	{
+        if (is_redirection_operator(word))
+		{
             redirection = true;
             type = search_type(word);
-        } else if (redirection) {
+		}
+        else if (redirection)
+		{
             process_redirection(&redir_head, &redir_current, word, type);
             redirection = false;
         }

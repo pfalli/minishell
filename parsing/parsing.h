@@ -91,7 +91,7 @@ void	append_node(t_token **head, t_token **current, t_token *new);
 
 // ** init ** //
 
-t_token	*init_multi_arrays(t_token *new, t_prompt *prompt);
+t_token	*init_multi_command(t_token *new, t_prompt *prompt);
 bool	initialize_multi_arrays(t_token *new, char *value_copy);
 
 // ** utils ** //
@@ -125,6 +125,7 @@ t_redirection	*create_redirection_list(t_token *new, t_prompt *prompt,
 void			append_redirection_node(t_redirection **head,
 	t_redirection **current, t_redirection *new_node);
 t_redirection	*create_redirection_node(char *file_name, t_type type);
+bool is_redirection_operator(const char *word);
 
 // ** dollar_sign **//
 char	*extract_var_name(const char *str, int *index);
@@ -145,5 +146,10 @@ void	sig_quit(int signal);
 void	sig_int_in_process(int signal);
 void	set_signals(void (*old_signal[2])(int));
 void	restore_signals(void (*old_signal[2])(int));
+
+// ***redirection_no_spaces*** //
+bool is_redirection_symbol(char c);
+char *redirection_with_no_space(char *message);
+bool is_redirection_operator(const char *word);
 
 #endif

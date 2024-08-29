@@ -49,9 +49,11 @@ void	minishell_loop(t_prompt *prompt, t_token **token_list, t_data *data)
 		signal(SIGQUIT, SIG_IGN);
 		if (message)
 			add_history(message);
-		message = expand_message(message, data);
-		*token_list = create_linked_list(prompt, message);
-		print_token_details(*token_list);
+		message = expand_message(message, data); // will return the double quotes
+		//printf("\nexpanded message: %s\n", message);
+		message = redirection_with_no_space(message);
+		*token_list = create_linked_list(prompt, message); // strtok is taking off the double quotes
+		//print_token_details(*token_list);
 		command_processor(*token_list, data);
 		//printf("exit stat %d\n", data->exit_status);
 		if (message)
