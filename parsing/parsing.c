@@ -27,7 +27,6 @@ t_token	*init_multi_command(t_token *new, t_prompt *prompt)
 	word = ft_strtok_copy(value_copy, prompt->whitespace);
 	while (word != NULL)
 	{
-		printf("word: %s\n", word);
 		if (is_redirection_operator(word))
 			redirection = true;
 		else if (redirection)
