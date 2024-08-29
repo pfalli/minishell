@@ -21,6 +21,8 @@
 #include <sys/wait.h>
 #include <sys/types.h>
 
+extern int g_sigint_exit_status;
+
 typedef struct s_data
 {
 	char	**envp;

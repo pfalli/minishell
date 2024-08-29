@@ -33,6 +33,15 @@ char	*check_syntax(char *word)
 	return (ft_strdup(new));
 }
 
+void update_exit_status(t_data *data)
+{
+    if (g_sigint_exit_status != 0)
+    {
+        data->exit_status = g_sigint_exit_status;
+        g_sigint_exit_status = 0;
+    }
+}
+
 void	minishell_loop(t_prompt *prompt, t_token **token_list, t_data *data)
 {
 	char	*message;
@@ -47,15 +56,14 @@ void	minishell_loop(t_prompt *prompt, t_token **token_list, t_data *data)
 		}
 		signal(SIGINT, sig_int);
 		signal(SIGQUIT, SIG_IGN);
+		update_exit_status(data);
 		if (message)
 			add_history(message);
 		message = expand_message(message, data); // will return the double quotes
-		//printf("\nexpanded message: %s\n", message);
 		message = redirection_with_no_space(message);
 		*token_list = create_linked_list(prompt, message); // strtok is taking off the double quotes
 		//print_token_details(*token_list);
 		command_processor(*token_list, data);
-		//printf("exit stat %d\n", data->exit_status);
 		if (message)
 			free(message);
 		ft_free_token_list(*token_list);

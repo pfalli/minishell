@@ -12,11 +12,12 @@
 
 #include "../minishell.h"
 
+int g_sigint_exit_status = 0;
 
-// if not global i create a struct for signals
 void	sig_int(int signal) // ctrl + C
 {
 	(void)signal;
+	g_sigint_exit_status = 130;
 	printf("\n");
 	rl_on_new_line();
 	rl_replace_line("", 0);
@@ -26,6 +27,7 @@ void	sig_int(int signal) // ctrl + C
 void	sig_int_in_process(int signal) // ctrl + C 
 {
 	(void)signal;
+	g_sigint_exit_status = 130;
 	printf("\n");
 }
 
