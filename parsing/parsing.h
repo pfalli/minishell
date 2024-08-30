@@ -118,6 +118,7 @@ void	ft_free_token_list(t_token *token_list);
 void	free_multi_arrays(t_token *token_list);
 void	free_multi_arr(char **arr);
 void	free_readline(void);
+void	free_redirection_node_list(t_redirection *redirection);
 
 // ** redirection**//
 t_redirection	*create_redirection_list(t_token *new, t_prompt *prompt,

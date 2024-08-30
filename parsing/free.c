@@ -15,6 +15,21 @@
 
 #include "../minishell.h"
 
+void free_redirection_node_list(t_redirection *redirection)
+{
+    t_redirection *current;
+    t_redirection *next;
+
+    current = redirection;
+    while (current != NULL)
+	{
+        next = current->next;
+        free(current->file_name);
+        free(current);
+        current = next;
+    }
+}
+
 void	ft_free_token_list(t_token *token_list)
 {
 	t_token	*token_list_holder;
@@ -25,7 +40,7 @@ void	ft_free_token_list(t_token *token_list)
 	{
 		free(token_list->value);
 		free_multi_arr(token_list->multi_command);
-		//free_multi_arr(token_list->multi_files);
+		free_redirection_node_list(token_list->redirection);
 		token_list_holder = token_list;
 		token_list = token_list->next;
 		free(token_list_holder);

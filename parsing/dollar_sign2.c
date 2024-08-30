@@ -42,6 +42,7 @@ char	*expand_message(char *message, t_data *data)
 		free(message);
 		message = expanded_message;
 	}
-	removed = remove_dollar(message);
+	removed = remove_dollar(message); // malloc
+	free(message);
 	return (removed);
 }

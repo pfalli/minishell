@@ -51,5 +51,6 @@ char	*redirection_with_no_space(char *message)
         i++;
     }
     new_message[j] = '\0';
+    free(message);
     return (new_message);
 }
