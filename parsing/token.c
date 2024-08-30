@@ -62,26 +62,39 @@ char *ft_strtok(char *str, const char *delim)
         last = end + 1;
     }
 
-    return str;
+    return (str);
 }
-
-void	strip_quotes(char **str, char *end)
+// Remove quotes if the string didn't start with a double quote.
+// ex: echo hello"world"
+void	strip_quotes(char **str)
 {
-	char	quote;
+    char	*src;
+    char	*dst;
+    char	start_quote;
 
-	quote = '\0';
-	if (**str == '"' || **str == '\'')
-	{
-		quote = **str;
-		(*str)++;
-	}
-	if (*(end - 1) == quote)
-	{
-		*(end - 1) = '\0';
-	}
+    src = *str;
+    dst = *str;
+    start_quote = '\0';
+    if (*src == '"')
+    {
+        start_quote = '"';
+        src++;
+    }
+    while (*src)
+    {
+        if (start_quote != '"' && (*src == '"' || *src == '\''))
+        {
+            src++;
+            continue;
+        }
+        *dst = *src;
+        dst++;
+        src++;
+    }
+    *dst = '\0';
 }
 
-// old one
+// strtok with strip_quotes
 char *ft_strtok_copy(char *str, const char *delim)
 {
     static char *last;
@@ -103,6 +116,6 @@ char *ft_strtok_copy(char *str, const char *delim)
         *end = '\0';
         last = end + 1;
     }
-    strip_quotes(&str, end);
-    return str;
+    strip_quotes(&str);
+    return (str);
 }

@@ -29,6 +29,7 @@ void init_list_nodes(t_token **head, t_token **current, t_token **new)
     *new = NULL;
 }
 
+// change the message for hanlding $ dollar sign
 char	*expand_message(char *message, t_data *data)
 {
 	char	*expanded_message;

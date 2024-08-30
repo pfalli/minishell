@@ -73,7 +73,7 @@ void process_dollar_removal(const char *str, char *new_str, int *i, int *j, int 
     (*i)++;
 }
 
-// changed for case: echo $ and echo "$"
+// remove the $ if inside the quotes, or not, but not if alone ("$" or $)
 char	*remove_dollar(char *str)
 {
     int		i;
