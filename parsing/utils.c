@@ -58,32 +58,43 @@ void	*free_and_return_null(void *ptr)
 	return (NULL);
 }
 
+void process_dollar_removal(const char *str, char *new_str, int *i, int *j, int len)
+{
+    if (str[*i] == '$' && (*i == len - 1 || str[*i + 1] == ' ' || str[*i + 1] == '"'))
+	{
+        new_str[*j] = str[*i];
+        (*j)++;
+    }
+	else if (str[*i] != '$')
+	{
+        new_str[*j] = str[*i];
+        (*j)++;
+    }
+    (*i)++;
+}
+
+// changed for case: echo $ and echo "$"
 char	*remove_dollar(char *str)
 {
-	int		i;
-	int		len;
-	char	*new_str;
-	int		j;
+    int		i;
+    int		len;
+    char	*new_str;
+    int		j;
 
-	i = 0;
-	if (!str)
-		return (NULL);
-	len = ft_strlen(str);
-	new_str = (char *)malloc(len + 1);
-	if (!new_str)
-		return (NULL);
-	j = 0;
-	while (i < len)
+    i = 0;
+    if (!str)
+        return (NULL);
+    len = ft_strlen(str);
+    new_str = (char *)malloc(len + 1);
+    if (!new_str)
+        return (NULL);
+    j = 0;
+    while (i < len)
 	{
-		if (str[i] != '$')
-		{
-			new_str[j] = str[i];
-			j++;
-		}
-		i++;
-	}
-	new_str[j] = '\0';
-	return (new_str);
+        process_dollar_removal(str, new_str, &i, &j, len);
+    }
+    new_str[j] = '\0';
+    return (new_str);
 }
 
 size_t	ft_strspn(const char *str, const char *accept)
