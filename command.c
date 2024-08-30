@@ -40,6 +40,32 @@ int	command_on_path(char **executable, t_data *data)
 	return (free(command_with_slash), 0);
 }
 
+int	heredoc(char *end)
+{
+	int		fd;
+	char	*line;
+
+	fd = open("/tmp/heredoc", O_RDWR | O_CREAT | O_TRUNC, 0644);
+	if (fd == -1)
+		return (printf("Error opening heredoc\n"), 0);
+	while (1)
+	{
+		line = readline("heredoc> ");
+		if (!line || (ft_strlen(line) == ft_strlen(end)
+				&& ft_strncmp(line, end, ft_strlen(line)) == 0))
+		{
+			close(fd);
+			open("/tmp/heredoc", O_RDONLY, 0644);
+			unlink("/tmp/heredoc");
+			return (free(line), fd);
+		}
+		write(fd, line, ft_strlen(line));
+		write(fd, "\n", 1);
+		free(line);
+	}
+	return (fd);
+}
+
 void	wire_files(t_execution *exec, t_redirection *cmdandfile)
 {
 	t_redirection	*current;
@@ -58,7 +84,7 @@ void	wire_files(t_execution *exec, t_redirection *cmdandfile)
 		else if (current->type == APPEND)
 			temp_out = open(current->file_name, 01 | O_APPEND | O_CREAT, 0644);
 		else if (current->type == HEREDOC)
-			temp_in = printf("Heredoc needs to be called here");
+			temp_in = heredoc(current->file_name);
 		current = current->next;
 		if (temp_in == -1 || temp_out == -1)
 			perror("minishell");
@@ -97,11 +123,13 @@ int	executor(t_token *cmdandfile, t_data *data, int in_fd, int out_fd)
 {
 	t_execution	exec;
 	int			pid;
-	void (*old_signal[2])(int);
+	void		(*old_signal[2])(int);
 
 	create_original_fds(&exec);
 	wire_files(&exec, cmdandfile->redirection);
 	handle_input_output(&exec, &in_fd, &out_fd);
+	if (!cmdandfile->multi_command || !cmdandfile->multi_command[0])
+		return (0);
 	if (builtin(cmdandfile->multi_command, data) == 1)
 		return (close_and_original_fd(&exec), 0);
 	if (access(cmdandfile->multi_command[0], X_OK) != 0)
