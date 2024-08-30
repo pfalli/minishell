@@ -75,22 +75,22 @@ void	strip_quotes(char **str)
     src = *str;
     dst = *str;
     start_quote = '\0';
-    if (*src == '"')
+    if (*src == '"' || *src == '\'')
     {
-        start_quote = '"';
+        start_quote = *src;
         src++;
     }
     while (*src)
     {
-        if (start_quote != '"' && (*src == '"' || *src == '\''))
+        if (start_quote == '\0' && (*src == '"' || *src == '\''))
         {
             src++;
             continue;
         }
-        *dst = *src;
-        dst++;
-        src++;
+        *dst++ = *src++;
     }
+    if (start_quote != '\0' && dst > *str && *(dst - 1) == start_quote)
+        dst--;
     *dst = '\0';
 }
 
