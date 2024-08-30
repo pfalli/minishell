@@ -66,5 +66,6 @@ void	create_original_fds(t_execution *exec);
 int		assign_and_close(int old_fd, int new_fd);
 char	*command_is_executable(char *joined_command);
 void	error(char *str, char *errormsg);
+void	mini_exit(char *exit_arg, t_data *env);
 
 #endif

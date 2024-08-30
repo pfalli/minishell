@@ -14,28 +14,30 @@
 
 int	mini_cd(char **command, t_data *env)
 {
-	int		status;
 	int		pos;
 	char	*pwd;
 	char	*temp;
 
+	temp = command[1];
 	if (!command[1] || ft_strncmp("~", command[1], 2) == 0)
 	{
 		temp = value_finder("HOME=", env->envp);
 		if (temp == NULL)
 			return (printf("HOME is not set\n"), 1);
 	}
-	else
-		temp = command[1];
-	status = chdir(temp);
-	if (status == -1)
+	else if (ft_strncmp(command[1], "-", 2) == 0)
+	{
+		temp = value_finder("OLDPWD=", env->envp);
+		if (temp == NULL)
+			return (printf("minishell: cd: OLDPWD not set\n"), 1);
+	}
+	if (chdir(temp) == -1)
 		return (perror("cd"), env->exit_status = 1, 1);
 	if (key_already_present("PWD=", env->envp, &pos))
 		env->envp = add_to_multi(env->envp, "OLDPWD=", env->envp[pos] + 4);
 	pwd = getcwd(NULL, 0);
 	env->envp = add_to_multi(env->envp, "PWD=", pwd);
-	free(pwd);
-	return (env->exit_status = 0, 1);
+	return (free(pwd), env->exit_status = 0, 1);
 }
 
 int	echo_first_line(char *command, int space)
@@ -84,30 +86,44 @@ int	mini_echo(char **command)
 	return (1);
 }
 
+void	mini_exit(char *exit_arg, t_data *env)
+{
+	int	exit_num;
+
+	printf("exit\n");
+	free_multi(env->envp);
+	free_multi(env->path);
+	if (exit_arg)
+		exit_num = ft_atoi(exit_arg);
+	else
+		exit_num = env->exit_status;
+	exit(exit_num);
+}
+
 int	builtin(char **command, t_data *env)
 {
 	char	*pwd;
 
 	if (!command || !command[0])
 		return (-1);
-	if (ft_strncmp(command[0], "pwd", ft_strlen(command[0])) == 0)
+	if (ft_strncmp(command[0], "pwd", 4) == 0)
 	{
 		if (command[1])
 			return (printf("pwd: too many arguments\n"), 1);
 		pwd = getcwd(NULL, 0);
 		return (printf("%s\n", pwd), free(pwd), env->exit_status = 0, 1);
 	}
-	if (ft_strncmp(command[0], "cd", ft_strlen(command[0])) == 0)
+	if (ft_strncmp(command[0], "cd", 3) == 0)
 		return (mini_cd(command, env));
-	if (ft_strncmp(command[0], "export", ft_strlen(command[0])) == 0)
+	if (ft_strncmp(command[0], "export", 7) == 0)
 		return (env->exit_status = 0, mini_export(command, env));
-	if (ft_strncmp(command[0], "unset", ft_strlen(command[0])) == 0)
+	if (ft_strncmp(command[0], "unset", 6) == 0)
 		return (env->exit_status = 0, env->envp = mini_unset(command, env), 1);
-	if (ft_strncmp(command[0], "echo", ft_strlen(command[0])) == 0)
+	if (ft_strncmp(command[0], "echo", 5) == 0)
 		return (env->exit_status = 0, mini_echo(command));
-	if (ft_strncmp(command[0], "env", ft_strlen(command[0])) == 0)
+	if (ft_strncmp(command[0], "env", 4) == 0)
 		return (env->exit_status = 0, print_env(env->envp, 0, command));
-	if (ft_strncmp(command[0], "exit", ft_strlen(command[0])) == 0)
-		exit(0);
+	if (ft_strncmp(command[0], "exit", 5) == 0)
+		mini_exit(command[1], env);
 	return (0);
 }

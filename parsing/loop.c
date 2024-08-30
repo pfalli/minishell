@@ -49,15 +49,12 @@ void	minishell_loop(t_prompt *prompt, t_token **token_list, t_data *data)
 	while (1)
 	{
 		message = readline(RED "MINISHELL$$ " RESET);
-		if (message == NULL)
-		{
-			printf("exit\n");
-			break ;
-		}
 		signal(SIGINT, sig_int);
 		signal(SIGQUIT, SIG_IGN);
 		update_exit_status(data);
-		if (message)
+		if (message == NULL)
+			mini_exit(NULL, data);
+		else
 			add_history(message);
 		message = expand_message(message, data);
 		message = redirection_with_no_space(message);
