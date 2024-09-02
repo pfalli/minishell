@@ -12,21 +12,22 @@
 
 #include "../minishell.h"
 
-int if_only_spaces(const char *str)
+int	if_only_spaces(const char *str)
 {
-    while (*str) {
-        if (*str != ' ')
-            return 0;
-        str++;
-    }
-    return 1;
+	while (*str)
+	{
+		if (*str != ' ')
+			return (0);
+		str++;
+	}
+	return (1);
 }
 
-void init_list_nodes(t_token **head, t_token **current, t_token **new)
+void	init_list_nodes(t_token **head, t_token **current, t_token **new)
 {
-    *head = NULL;
-    *current = NULL;
-    *new = NULL;
+	*head = NULL;
+	*current = NULL;
+	*new = NULL;
 }
 
 // change the message for hanlding $ dollar sign
@@ -43,7 +44,7 @@ char	*expand_message(char *message, t_data *data)
 		free(message);
 		message = expanded_message;
 	}
-	removed = remove_dollar(message); // malloc
+	removed = remove_dollar(message);
 	free(message);
 	return (removed);
 }

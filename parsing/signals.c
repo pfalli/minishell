@@ -12,7 +12,7 @@
 
 #include "../minishell.h"
 
-int g_sigint_exit_status = 0;
+int	g_sigint_exit_status = 0;
 
 void	sig_int(int signal) // ctrl + C
 {
@@ -37,14 +37,14 @@ void	sig_quit(int signal) // ctrl + '\' QUit
 	printf("Quit\n");
 }
 
-void set_signals(void (*old_signal[2])(int))
+void	set_signals(void (*old_signal[2])(int))
 {
-    old_signal[0] = signal(SIGINT, sig_int_in_process);
-    old_signal[1] = signal(SIGQUIT, sig_quit);
+	old_signal[0] = signal(SIGINT, sig_int_in_process);
+	old_signal[1] = signal(SIGQUIT, sig_quit);
 }
 
-void restore_signals(void (*old_signal[2])(int))
+void	restore_signals(void (*old_signal[2])(int))
 {
-    signal(SIGINT, old_signal[0]);
-    signal(SIGQUIT, old_signal[1]);
+	signal(SIGINT, old_signal[0]);
+	signal(SIGQUIT, old_signal[1]);
 }

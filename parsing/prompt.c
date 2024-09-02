@@ -12,7 +12,6 @@
 
 #include "../minishell.h"
 
-// prompt->quotes = "\'\"";
 void	init_prompt(t_prompt *prompt)
 {
 	memset(prompt, 0, sizeof(t_prompt));

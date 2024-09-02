@@ -57,7 +57,7 @@ t_token	*create_linked_list(t_prompt *prompt, char *message)
 		if (new == NULL)
 		{
 			ft_free_token_list(new);
-			return NULL;
+			return (NULL);
 		}
 		append_node(&head, &current, new);
 		init_multi_command(new, prompt);
@@ -104,9 +104,7 @@ t_token	*create_token(char *word)
 		new_token->value[i] = word[i];
 		i++;
 	}
-	new_token->value[i] = 0;
 	new_token->next = NULL;
-	new_token->file_count = 0;
 	new_token->cmd_count = 0;
 	return (new_token);
 }

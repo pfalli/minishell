@@ -33,13 +33,13 @@ char	*check_syntax(char *word)
 	return (ft_strdup(new));
 }
 
-void update_exit_status(t_data *data)
+void	update_exit_status(t_data *data)
 {
-    if (g_sigint_exit_status != 0)
-    {
-        data->exit_status = g_sigint_exit_status;
-        g_sigint_exit_status = 0;
-    }
+	if (g_sigint_exit_status != 0)
+	{
+		data->exit_status = g_sigint_exit_status;
+		g_sigint_exit_status = 0;
+	}
 }
 
 void	minishell_loop(t_prompt *prompt, t_token **token_list, t_data *data)

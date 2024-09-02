@@ -70,7 +70,6 @@ int	main(int argc, char *argv[], char **envp)
     minishell_loop(&prompt, &token_list, &env);
 	free_multi(env.path);
 	free_multi(env.envp);
-    //free_prompt(&prompt);
 	clear_history();
     free_readline();
 	return (0);

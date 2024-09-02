@@ -2,9 +2,12 @@
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   redirection_token.c                                :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: pfalli <pfalli@student.42wolfsburg.de>     +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
+/*                                                    +:+ +:+        
+	+:+     */
+/*   By: pfalli <pfalli@student.42wolfsburg.de>     +#+  +:+      
+	+#+        */
+/*                                                +#+#+#+#+#+  
+	+#+           */
 /*   Created: 2024/08/21 14:36:12 by pfalli            #+#    #+#             */
 /*   Updated: 2024/08/21 14:36:12 by pfalli           ###   ########.fr       */
 /*                                                                            */
@@ -44,64 +47,48 @@ void	append_redirection_node(t_redirection **head, t_redirection **current,
 		*current = new_node;
 	}
 }
-bool is_redirection_operator(const char *word)
+
+bool	is_redirection_operator(const char *word)
 {
-    return (strcmp(word, ">") == 0 || strcmp(word, "<") == 0 ||
-            strcmp(word, ">>") == 0 || strcmp(word, "<<") == 0);
+	return (strcmp(word, ">") == 0 || strcmp(word, "<") == 0 || strcmp(word,
+			">>") == 0 || strcmp(word, "<<") == 0);
 }
 
-void process_redirection(t_redirection **redir_head, t_redirection **redir_current, 
-                         char *word, t_type type)
+void	process_redirection(t_redirection **redir_head,
+		t_redirection **redir_current, char *word, t_type type)
 {
-    t_redirection *new_redir;
+	t_redirection	*new_redir;
 
 	new_redir = create_redirection_node(word, type);
-    append_redirection_node(redir_head, redir_current, new_redir);
+	append_redirection_node(redir_head, redir_current, new_redir);
 }
 
-t_redirection *create_redirection_list(t_token *new, t_prompt *prompt, char *message)
+t_redirection	*create_redirection_list(t_token *new, t_prompt *prompt,
+		char *message)
 {
-    t_redirection *redir_head;
-    t_redirection *redir_current;
-    char *word;
-    bool redirection;
-    t_type type;
+	t_redirection	*redir_head;
+	t_redirection	*redir_current;
+	char			*word;
+	bool			redirection;
+	t_type			type;
 
 	redirection = false;
-	redir_head = NULL;
-	redir_current = NULL;
+	initialize_redirection_pointers(&redir_head, &redir_current);
 	word = ft_strtok_copy(message, prompt->whitespace);
-    while (word != NULL)
+	while (word != NULL)
 	{
-        if (is_redirection_operator(word))
+		if (is_redirection_operator(word))
 		{
-            redirection = true;
-            type = search_type(word);
+			redirection = true;
+			type = search_type(word);
 		}
-        else if (redirection)
+		else if (redirection)
 		{
-            process_redirection(&redir_head, &redir_current, word, type);
-            redirection = false;
-        }
-        word = ft_strtok_copy(NULL, prompt->whitespace);
-    }
-    new->redirection = redir_head;
-    return redir_head;
-}
-
-
-t_type	search_type(char *word)
-{
-	t_type	type;
-
-	type = 0;
-	if (strcmp(word, "<") == 0)
-		type = REDIRECTION_IN;
-	else if (strcmp(word, ">") == 0)
-		type = REDIRECTION_OUT;
-	else if (strcmp(word, ">>") == 0)
-		type = APPEND;
-	else if (strcmp(word, "<<") == 0)
-		type = HEREDOC;
-	return (type);
+			process_redirection(&redir_head, &redir_current, word, type);
+			redirection = false;
+		}
+		word = ft_strtok_copy(NULL, prompt->whitespace);
+	}
+	new->redirection = redir_head;
+	return (redir_head);
 }
