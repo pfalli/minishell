@@ -20,7 +20,7 @@ int	command_on_path(char **executable, t_data *data)
 	int		i;
 
 	i = 0;
-	if (!data->path || !data->path[0] || !executable || !executable[0])
+	if (!data->path || !data->path[0] || !executable || executable[0][0] == 0)
 		return (0);
 	command_with_slash = ft_strjoin("/", executable[0]);
 	while (data->path[i])
@@ -141,7 +141,7 @@ int	executor(t_token *cmdandfile, t_data *data, int in_fd, int out_fd)
 	else if (pid == 0)
 	{
 		execve(cmdandfile->multi_command[0], cmdandfile->multi_command, data->envp);
-		printf("command not found: %s\n", cmdandfile->multi_command[0]);
+		printf("'%s': command not found\n", cmdandfile->multi_command[0]);
 		free_multi(cmdandfile->multi_command);
 		exit(127);
 	}

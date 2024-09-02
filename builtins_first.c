@@ -94,9 +94,11 @@ void	mini_exit(char *exit_arg, t_data *env)
 	free_multi(env->envp);
 	free_multi(env->path);
 	if (exit_arg)
-		exit_num = ft_atoi(exit_arg);
+		exit_num = ft_atoi(exit_arg) % 256;
 	else
 		exit_num = env->exit_status;
+	clear_history();
+	free_readline();
 	exit(exit_num);
 }
 
