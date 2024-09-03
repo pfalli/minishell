@@ -153,5 +153,6 @@ t_type			search_type(char *word);
 void			initialize_redirection_pointers(t_redirection **redir_head,
 					t_redirection **redir_current);
 bool			single_quote(const char *str);
+char*			ft_strcpy(char* destination, const char* source);
 
 #endif

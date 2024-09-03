@@ -77,3 +77,16 @@ bool	single_quote(const char *str)
 	}
 	return (false);
 }
+
+char* ft_strcpy(char* destination, const char* source)
+{
+	char*	ptr;
+
+	ptr = destination;
+	while (*source != '\0')
+	{
+	    *ptr++ = *source++;
+	}
+	*ptr = '\0';
+	return (destination);
+}
