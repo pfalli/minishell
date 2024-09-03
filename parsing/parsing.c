@@ -82,30 +82,27 @@ void	append_node(t_token **head, t_token **current, t_token *new)
 	}
 }
 
-t_token	*create_token(char *word)
+t_token *create_token(char *word)
 {
 	t_token	*new_token;
-	int		i;
-	int		length;
+	int	length;
 
-	i = 0;
 	length = strlen(word);
 	new_token = malloc(sizeof(t_token));
 	if (new_token == NULL)
-		return (NULL);
+	    return (NULL);
 	new_token->value = (char *)malloc(sizeof(char) * (length + 1));
 	if (new_token->value == NULL)
 	{
-		free(new_token);
-		return (NULL);
+	    free(new_token);
+	    return (NULL);
 	}
-	while (i < length)
-	{
-		new_token->value[i] = word[i];
-		i++;
-	}
+	strcpy(new_token->value, word);
 	new_token->next = NULL;
 	new_token->cmd_count = 0;
+	new_token->word_count = 0;
+	new_token->multi_command = NULL;
+	new_token->redirection = NULL;
 	return (new_token);
 }
 
