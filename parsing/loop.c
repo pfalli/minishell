@@ -28,17 +28,17 @@ char	*check_syntax(char *word)
 	new = (char *)malloc(len - 1);
 	if (!new)
 		return (NULL);
-	strncpy(new, word + 1, len - 2);
+	ft_strncpy(new, word + 1, len - 2);
 	new[len - 2] = '\0';
 	return (ft_strdup(new));
 }
 
 void	update_exit_status(t_data *data)
 {
-	if (g_sigint_exit_status != 0)
+	if (g_signal != 0)
 	{
-		data->exit_status = g_sigint_exit_status;
-		g_sigint_exit_status = 0;
+		data->exit_status = g_signal;
+		g_signal = 0;
 	}
 }
 

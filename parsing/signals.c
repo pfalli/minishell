@@ -12,12 +12,12 @@
 
 #include "../minishell.h"
 
-int	g_sigint_exit_status = 0;
+int	g_signal = 0;
 
 void	sig_int(int signal) // ctrl + C
 {
-	(void)signal;
-	g_sigint_exit_status = 130;
+	signal = 130;
+	g_signal = signal;
 	printf("\n");
 	rl_on_new_line();
 	rl_replace_line("", 0);
@@ -26,14 +26,15 @@ void	sig_int(int signal) // ctrl + C
 
 void	sig_int_in_process(int signal) // ctrl + C 
 {
-	(void)signal;
-	g_sigint_exit_status = 130;
+	signal = 130;
+	g_signal = signal;
 	printf("\n");
 }
 
 void	sig_quit(int signal) // ctrl + '\' QUit
 {
-	(void) signal;
+	signal = 131;
+	g_signal = signal;
 	printf("Quit\n");
 }
 
