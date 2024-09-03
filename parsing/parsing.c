@@ -97,7 +97,7 @@ t_token *create_token(char *word)
 	    free(new_token);
 	    return (NULL);
 	}
-	strcpy(new_token->value, word);
+	ft_strcpy(new_token->value, word);
 	new_token->next = NULL;
 	new_token->cmd_count = 0;
 	new_token->word_count = 0;
