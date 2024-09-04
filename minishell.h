@@ -51,7 +51,7 @@ char	*set_shell_level(size_t level, char *old_level);
 int		set_default_env(t_data *env);
 int		init_path(t_data	*env);
 int		init_env(char **envp, t_data *env);
-int		builtin(char **command, t_data *env);
+int		builtin(char **command, t_data *env, t_token *all);
 int		mini_export(char **command, t_data *env);
 char	**mini_unset(char **command, t_data *env);
 int		print_env(char **multidimensional, int sort, char **command);
@@ -66,6 +66,6 @@ void	create_original_fds(t_execution *exec);
 int		assign_and_close(int old_fd, int new_fd);
 char	*command_is_executable(char *joined_command);
 void	error(char *str, char *errormsg);
-void	mini_exit(char *exit_arg, t_data *env);
+void	mini_exit(char *exit_arg, t_data *env, t_token *all);
 
 #endif
