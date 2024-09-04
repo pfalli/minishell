@@ -13,6 +13,12 @@
 #include "minishell.h"
 #include <signal.h>
 
+//	static void	sig_heredoc(int signal)
+//	{
+//		if (signal == SIGINT)
+//			exit(130);
+//	}
+
 int	command_on_path(char **executable, t_data *data)
 {
 	char	*command_with_slash;
@@ -50,6 +56,7 @@ int	heredoc(char *end)
 		return (printf("Error opening heredoc\n"), 0);
 	while (1)
 	{
+		signal(SIGINT, sig_int_in_process);
 		line = readline("heredoc> ");
 		if (!line || (ft_strlen(line) == ft_strlen(end)
 				&& ft_strncmp(line, end, ft_strlen(line)) == 0))

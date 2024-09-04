@@ -24,6 +24,7 @@ void	sig_int(int signal) // ctrl + C
 	rl_redisplay();
 }
 
+
 void	sig_int_in_process(int signal) // ctrl + C 
 {
 	signal = 130;
