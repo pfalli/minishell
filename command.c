@@ -130,7 +130,6 @@ int	executor(t_token *cmdandfile, t_data *data, int in_fd, int out_fd)
 {
 	t_execution	exec;
 	int			pid;
-	void		(*old_signal[2])(int);
 
 	create_original_fds(&exec);
 	wire_files(&exec, cmdandfile->redirection);
@@ -141,7 +140,6 @@ int	executor(t_token *cmdandfile, t_data *data, int in_fd, int out_fd)
 		return (close_and_original_fd(&exec), 0);
 	if (access(cmdandfile->multi_command[0], X_OK) != 0)
 		command_on_path(cmdandfile->multi_command, data);
-	set_signals(old_signal);
 	pid = fork();
 	if (pid == -1)
 		error("fork", NULL);
@@ -156,7 +154,7 @@ int	executor(t_token *cmdandfile, t_data *data, int in_fd, int out_fd)
 		close(in_fd);
 	if (out_fd != -1)
 		close(out_fd);
-	return (close_and_original_fd(&exec), restore_signals(old_signal), pid);
+	return (close_and_original_fd(&exec), pid);
 }
 
 void	command_processor(t_token *cmdandfile, t_data *data)
@@ -165,10 +163,12 @@ void	command_processor(t_token *cmdandfile, t_data *data)
 	int	prev_fd;
 	int	original[2];
 	int	last_pid;
+	void		(*old_signal[2])(int);
 
 	prev_fd = -1;
 	original[0] = dup(0);
 	original[1] = dup(1);
+	set_signals(old_signal);
 	while (cmdandfile)
 	{
 		if (cmdandfile->next)
@@ -186,4 +186,5 @@ void	command_processor(t_token *cmdandfile, t_data *data)
 		cmdandfile = cmdandfile->next;
 	}
 	wait_and_restore(original, last_pid, data);
+	restore_signals(old_signal);
 }
