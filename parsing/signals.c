@@ -14,6 +14,15 @@
 
 int	g_signal = 0;
 
+void	sig_heredoc(int signal)
+{
+	signal = 130;
+	g_signal = signal;
+	rl_redisplay();
+	rl_done = 1;
+	printf("\n");
+}
+
 void	sig_int(int signal) // ctrl + C
 {
 	signal = 130;

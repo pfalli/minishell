@@ -144,6 +144,7 @@ void			sig_quit(int signal);
 void			sig_int_in_process(int signal);
 void			set_signals(void (*old_signal[2])(int));
 void			restore_signals(void (*old_signal[2])(int));
+void			sig_heredoc(int signal);
 
 // ***redirection_no_spaces*** //
 bool			is_redirection_symbol(char c);

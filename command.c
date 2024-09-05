@@ -11,13 +11,6 @@
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include <signal.h>
-
-//	static void	sig_heredoc(int signal)
-//	{
-//		if (signal == SIGINT)
-//			exit(130);
-//	}
 
 int	command_on_path(char **executable, t_data *data)
 {
@@ -56,10 +49,10 @@ int	heredoc(char *end)
 		return (printf("Error opening heredoc\n"), 0);
 	while (1)
 	{
-		signal(SIGINT, sig_int_in_process);
+		signal(SIGINT, sig_heredoc);
 		line = readline("heredoc> ");
 		if (!line || (ft_strlen(line) == ft_strlen(end)
-				&& ft_strncmp(line, end, ft_strlen(line)) == 0))
+				&& ft_strncmp(line, end, ft_strlen(line)) == 0) || g_signal == 130)
 		{
 			close(fd);
 			open("/tmp/heredoc", O_RDONLY, 0644);
@@ -163,11 +156,11 @@ void	command_processor(t_token *cmdandfile, t_data *data)
 	int	prev_fd;
 	int	original[2];
 	int	last_pid;
-	void		(*old_signal[2])(int);
+	void	(*old_signal[2])(int);
 
 	prev_fd = -1;
-	original[0] = dup(0);
-	original[1] = dup(1);
+	original[0] = dup(STDIN_FILENO);
+	original[1] = dup(STDOUT_FILENO);
 	set_signals(old_signal);
 	while (cmdandfile)
 	{
@@ -177,6 +170,7 @@ void	command_processor(t_token *cmdandfile, t_data *data)
 				error("pipe", NULL);
 			executor(cmdandfile, data, prev_fd, fds[1]);
 			close(fds[1]);
+			prev_fd = fds[0];
 		}
 		else
 			last_pid = executor(cmdandfile, data, prev_fd, original[1]);
