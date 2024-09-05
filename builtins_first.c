@@ -86,7 +86,7 @@ int	mini_echo(char **command)
 	return (1);
 }
 
-void	mini_exit(char *exit_arg, t_data *env)
+void	mini_exit(char *exit_arg, t_data *env, t_token *all)
 {
 	int	exit_num;
 
@@ -99,10 +99,11 @@ void	mini_exit(char *exit_arg, t_data *env)
 		exit_num = env->exit_status;
 	clear_history();
 	free_readline();
+	ft_free_token_list(all);
 	exit(exit_num);
 }
 
-int	builtin(char **command, t_data *env)
+int	builtin(char **command, t_data *env, t_token *all)
 {
 	char	*pwd;
 
@@ -126,6 +127,6 @@ int	builtin(char **command, t_data *env)
 	if (ft_strncmp(command[0], "env", 4) == 0)
 		return (env->exit_status = 0, print_env(env->envp, 0, command));
 	if (ft_strncmp(command[0], "exit", 5) == 0)
-		mini_exit(command[1], env);
+		mini_exit(command[1], env, all);
 	return (0);
 }

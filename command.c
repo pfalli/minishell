@@ -129,7 +129,7 @@ int	executor(t_token *cmdandfile, t_data *data, int in_fd, int out_fd)
 	handle_input_output(&exec, &in_fd, &out_fd);
 	if (!cmdandfile->multi_command || !cmdandfile->multi_command[0])
 		return (0);
-	if (builtin(cmdandfile->multi_command, data) == 1)
+	if (builtin(cmdandfile->multi_command, data, cmdandfile) == 1)
 		return (close_and_original_fd(&exec), 0);
 	if (access(cmdandfile->multi_command[0], X_OK) != 0)
 		command_on_path(cmdandfile->multi_command, data);
