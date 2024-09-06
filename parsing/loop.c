@@ -53,13 +53,12 @@ void	minishell_loop(t_prompt *prompt, t_token **token_list, t_data *data)
 		signal(SIGQUIT, SIG_IGN);
 		update_exit_status(data);
 		if (message == NULL)
-			mini_exit(NULL, data);
+			mini_exit(NULL, data, *token_list);
 		else
 			add_history(message);
 		message = expand_message(message, data);
 		message = redirection_with_no_space(message);
 		*token_list = create_linked_list(prompt, message);
-		//print_token_details(*token_list);
 		command_processor(*token_list, data);
 		if (message)
 			free(message);

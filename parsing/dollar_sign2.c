@@ -48,3 +48,25 @@ char	*expand_message(char *message, t_data *data)
 	free(message);
 	return (removed);
 }
+
+void	sig_heredoc(int signal)
+{
+	signal = 130;
+	g_signal = signal;
+	rl_redisplay();
+	rl_done = 1;
+	printf("\n");
+}
+
+char	*ft_strcpy(char *destination, const char *source)
+{
+	char	*ptr;
+
+	ptr = destination;
+	while (*source != '\0')
+	{
+		*ptr++ = *source++;
+	}
+	*ptr = '\0';
+	return (destination);
+}

@@ -33,7 +33,7 @@
 # include <unistd.h>
 # include <wait.h>
 
-extern int	g_signal;
+extern int				g_signal;
 
 typedef struct s_token	t_token;
 typedef struct s_data	t_data;
@@ -42,7 +42,7 @@ typedef struct s_data	t_data;
 
 typedef enum e_type
 {
-	START, 
+	START,
 	REDIRECTION_IN,
 	REDIRECTION_OUT,
 	APPEND,
@@ -156,7 +156,7 @@ t_type			search_type(char *word);
 void			initialize_redirection_pointers(t_redirection **redir_head,
 					t_redirection **redir_current);
 bool			single_quote(const char *str);
-char*			ft_strcpy(char* destination, const char* source);
+char			*ft_strcpy(char *destination, const char *source);
 char			*ft_strncpy(char *dst, const char *src, size_t n);
 
 #endif

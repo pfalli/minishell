@@ -78,32 +78,20 @@ bool	single_quote(const char *str)
 	return (false);
 }
 
-char* ft_strcpy(char* destination, const char* source)
-{
-	char*	ptr;
-
-	ptr = destination;
-	while (*source != '\0')
-	{
-	    *ptr++ = *source++;
-	}
-	*ptr = '\0';
-	return (destination);
-}
-char *ft_strncpy(char *dst, const char *src, size_t n)
+char	*ft_strncpy(char *dst, const char *src, size_t n)
 {
 	size_t	i;
-	
+
 	i = 0;
 	while (i < n && src[i] != '\0')
 	{
-	    dst[i] = src[i];
-	    i++;
+		dst[i] = src[i];
+		i++;
 	}
 	while (i < n)
 	{
-	    dst[i] = '\0';
-	    i++;
+		dst[i] = '\0';
+		i++;
 	}
 	return (dst);
 }
