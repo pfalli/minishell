@@ -18,9 +18,9 @@
 # include <stdio.h>
 # include <unistd.h>
 # include "42_libft/libft.h"
-#include <sys/wait.h>
-#include <sys/types.h>
-#include <signal.h>
+# include <sys/wait.h>
+# include <sys/types.h>
+# include <signal.h>
 
 typedef struct s_data
 {
@@ -53,18 +53,21 @@ int		init_env(char **envp, t_data *env);
 int		builtin(char **command, t_data *env, t_token *all);
 int		mini_export(char **command, t_data *env);
 char	**mini_unset(char **command, t_data *env);
-int		print_env(char **multidimensional, int sort, char **command);
+int		print_env(char **multidimensional, int sort, char **command, int i);
 char	*key_extractor(char *text);
 char	*value_finder(char *key, char **multidimensional);
 char	*export_key(char *src);
 int		command_on_path(char **executable, t_data *data);
-void	command_processor(t_token *cmdandfile, t_data *data);
-void	wait_and_restore(int original[2], int last_pid, t_data *data);
+int		command_processor(t_token *cmdandfile, t_data *data);
+void	wait_and_restore(int last_pid, t_data *data);
 void	close_and_original_fd(t_execution *exec);
 void	create_original_fds(t_execution *exec);
 int		assign_and_close(int old_fd, int new_fd);
 char	*command_is_executable(char *joined_command);
+void	handle_input_output(t_execution *exec, int *in, int *out);
+int		heredoc(char *end);
+void	execute(t_token *cmdandfile, t_data *data);
 void	error(char *str, char *errormsg);
-void	mini_exit(char *exit_arg, t_data *env, t_token *all);
+void	mini_exit(char *exit_arg, t_data *env, t_token *all, int loopflag);
 
 #endif

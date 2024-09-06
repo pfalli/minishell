@@ -66,7 +66,7 @@ int	mini_export(char **command, t_data *env)
 	char	*value;
 
 	if (command[1] == NULL)
-		return (print_env(env->envp, 1, command), 1);
+		return (print_env(env->envp, 1, command, 0), 1);
 	key = export_key(command[1]);
 	if (key == NULL)
 		return (1);
@@ -93,13 +93,11 @@ char	**mini_unset(char **command, t_data *env)
 	return (remove_from_multi(env->envp, command[1]));
 }
 
-int	print_env(char **multidimensional, int sort, char **command)
+int	print_env(char **multidimensional, int sort, char **command, int i)
 {
 	char	**sorted;
 	int		size;
-	int		i;
 
-	i = 0;
 	size = multi_size(multidimensional);
 	if (size < 0 || command[1])
 		return (1);

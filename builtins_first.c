@@ -86,7 +86,7 @@ int	mini_echo(char **command)
 	return (1);
 }
 
-void	mini_exit(char *exit_arg, t_data *env, t_token *all)
+void	mini_exit(char *exit_arg, t_data *env, t_token *all, int loopflag)
 {
 	int	exit_num;
 
@@ -99,7 +99,8 @@ void	mini_exit(char *exit_arg, t_data *env, t_token *all)
 		exit_num = env->exit_status;
 	clear_history();
 	free_readline();
-	ft_free_token_list(all);
+	if (!loopflag)
+		ft_free_token_list(all);
 	exit(exit_num);
 }
 
@@ -125,8 +126,8 @@ int	builtin(char **command, t_data *env, t_token *all)
 	if (ft_strncmp(command[0], "echo", 5) == 0)
 		return (env->exit_status = 0, mini_echo(command));
 	if (ft_strncmp(command[0], "env", 4) == 0)
-		return (env->exit_status = 0, print_env(env->envp, 0, command));
+		return (env->exit_status = 0, print_env(env->envp, 0, command, 0));
 	if (ft_strncmp(command[0], "exit", 5) == 0)
-		mini_exit(command[1], env, all);
+		mini_exit(command[1], env, all, 0);
 	return (0);
 }

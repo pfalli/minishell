@@ -39,33 +39,6 @@ int	command_on_path(char **executable, t_data *data)
 	return (free(command_with_slash), 0);
 }
 
-int	heredoc(char *end)
-{
-	int		fd;
-	char	*line;
-
-	fd = open("/tmp/heredoc", O_RDWR | O_CREAT | O_TRUNC, 0644);
-	if (fd == -1)
-		return (printf("Error opening heredoc\n"), 0);
-	while (1)
-	{
-		signal(SIGINT, sig_heredoc);
-		line = readline("heredoc> ");
-		if (!line || (ft_strlen(line) == ft_strlen(end)
-				&& ft_strncmp(line, end, ft_strlen(line)) == 0) || g_signal == 130)
-		{
-			close(fd);
-			open("/tmp/heredoc", O_RDONLY, 0644);
-			unlink("/tmp/heredoc");
-			return (free(line), fd);
-		}
-		write(fd, line, ft_strlen(line));
-		write(fd, "\n", 1);
-		free(line);
-	}
-	return (fd);
-}
-
 void	wire_files(t_execution *exec, t_redirection *cmdandfile)
 {
 	t_redirection	*current;
@@ -95,30 +68,6 @@ void	wire_files(t_execution *exec, t_redirection *cmdandfile)
 	}
 }
 
-void	handle_input_output(t_execution *exec, int *in, int *out)
-{
-	if (exec->in != 0)
-	{
-		dup2(exec->in, 0);
-		close(exec->in);
-	}
-	else if (*in != -1)
-	{
-		dup2(*in, 0);
-		close(*in);
-	}
-	if (exec->out != 1)
-	{
-		dup2(exec->out, 1);
-		close(exec->out);
-	}
-	else if (*out != 1)
-	{
-		dup2(*out, 1);
-		close(*out);
-	}
-}
-
 int	executor(t_token *cmdandfile, t_data *data, int in_fd, int out_fd)
 {
 	t_execution	exec;
@@ -137,12 +86,7 @@ int	executor(t_token *cmdandfile, t_data *data, int in_fd, int out_fd)
 	if (pid == -1)
 		error("fork", NULL);
 	else if (pid == 0)
-	{
-		execve(cmdandfile->multi_command[0], cmdandfile->multi_command, data->envp);
-		printf("'%s': command not found\n", cmdandfile->multi_command[0]);
-		free_multi(cmdandfile->multi_command);
-		exit(127);
-	}
+		execute(cmdandfile, data);
 	if (in_fd != -1)
 		close(in_fd);
 	if (out_fd != -1)
@@ -150,17 +94,14 @@ int	executor(t_token *cmdandfile, t_data *data, int in_fd, int out_fd)
 	return (close_and_original_fd(&exec), pid);
 }
 
-void	command_processor(t_token *cmdandfile, t_data *data)
+int	command_processor(t_token *cmdandfile, t_data *data)
 {
-	int	fds[2];
-	int	prev_fd;
-	int	original[2];
-	int	last_pid;
+	int		fds[2];
+	int		prev_fd;
+	int		last_pid;
 	void	(*old_signal[2])(int);
 
 	prev_fd = -1;
-	original[0] = dup(STDIN_FILENO);
-	original[1] = dup(STDOUT_FILENO);
 	set_signals(old_signal);
 	while (cmdandfile)
 	{
@@ -173,12 +114,11 @@ void	command_processor(t_token *cmdandfile, t_data *data)
 			prev_fd = fds[0];
 		}
 		else
-			last_pid = executor(cmdandfile, data, prev_fd, original[1]);
+			last_pid = executor(cmdandfile, data, prev_fd, 1);
 		if (prev_fd != -1)
 			close(prev_fd);
 		prev_fd = fds[0];
 		cmdandfile = cmdandfile->next;
 	}
-	wait_and_restore(original, last_pid, data);
-	restore_signals(old_signal);
+	return (wait_and_restore(last_pid, data), restore_signals(old_signal), 0);
 }

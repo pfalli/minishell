@@ -51,7 +51,7 @@ void	close_and_original_fd(t_execution *exec)
 		close(exec->in);
 }
 
-void	wait_and_restore(int original[2], int last_pid, t_data *data)
+void	wait_and_restore(int last_pid, t_data *data)
 {
 	int	pid;
 	int	status;
@@ -67,8 +67,4 @@ void	wait_and_restore(int original[2], int last_pid, t_data *data)
 		}
 		pid = wait(&status);
 	}
-	dup2(original[0], 0);
-	dup2(original[1], 1);
-	close(original[0]);
-	close(original[1]);
 }

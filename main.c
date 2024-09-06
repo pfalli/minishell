@@ -57,21 +57,22 @@ char	*value_finder(char *key, char **multidimensional)
 
 int	main(int argc, char *argv[], char **envp)
 {
-	t_data	env;
-	t_prompt prompt;
-    t_token *token_list = NULL;
+	t_data		env;
+	t_prompt	prompt;
+	t_token		*token_list;
+
+	token_list = NULL;
 	if (argc > 1 && argv[0] != NULL)
 		return (printf("%s doesn't accept arguments!\n", argv[0]));
 	if (init_env(envp, &env) || init_path(&env))
 		return (0);
 	signal(SIGINT, sig_int);
 	signal(SIGQUIT, SIG_IGN);
-    init_prompt(&prompt);
-    minishell_loop(&prompt, &token_list, &env);
+	init_prompt(&prompt);
+	minishell_loop(&prompt, &token_list, &env);
 	free_multi(env.path);
 	free_multi(env.envp);
 	clear_history();
-    free_readline();
+	free_readline();
 	return (0);
 }
-
