@@ -111,7 +111,6 @@ int	command_processor(t_token *cmdandfile, t_data *data)
 				error("pipe", NULL);
 			executor(cmdandfile, data, prev_fd, fds[1]);
 			close(fds[1]);
-			prev_fd = fds[0];
 		}
 		else
 			last_pid = executor(cmdandfile, data, prev_fd, 1);
