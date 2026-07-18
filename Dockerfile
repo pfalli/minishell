@@ -1,4 +1,5 @@
-FROM debian:bookworm-slim AS builder
+# Build Minishell
+FROM debian:bookworm-slim AS minishell-builder
 
 RUN apt-get update \
 	&& apt-get install --no-install-recommends -y \
@@ -7,28 +8,37 @@ RUN apt-get update \
 	&& rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
+
 COPY . .
+
 RUN make
 
 
-FROM tsl0922/ttyd:latest
+# Obtain ttyd from its official image
+FROM tsl0922/ttyd:latest AS ttyd-source
 
-USER root
 
-RUN apk add --no-cache \
-	readline \
-	bash \
-	coreutils \
-	grep \
-	sed \
-	&& adduser -D -s /bin/bash demo
+# Runtime image
+FROM ubuntu:24.04
+
+RUN apt-get update \
+	&& apt-get install --no-install-recommends -y \
+		libreadline8t64 \
+		bash \
+		coreutils \
+		grep \
+		sed \
+		tini \
+	&& rm -rf /var/lib/apt/lists/* \
+	&& useradd --create-home --shell /bin/bash demo
 
 WORKDIR /app
 
-COPY --from=builder /app/minishell ./minishell
+COPY --from=minishell-builder /app/minishell /app/minishell
+COPY --from=ttyd-source /usr/bin/ttyd /usr/bin/ttyd
 
-RUN chown -R demo:demo /app \
-	&& chmod +x /app/minishell
+RUN chmod +x /app/minishell /usr/bin/ttyd \
+	&& chown -R demo:demo /app /home/demo
 
 USER demo
 
@@ -37,4 +47,6 @@ ENV TERM=xterm-256color
 
 EXPOSE 7681
 
-CMD ["sh", "-c", "exec ttyd --writable --max-clients 1 --interface 0.0.0.0 --port ${PORT:-7681} ./minishell"]
+ENTRYPOINT ["/usr/bin/tini", "--"]
+
+CMD ["sh", "-c", "exec ttyd -W -m 1 -i 0.0.0.0 -p ${PORT:-7681} /app/minishell"]
