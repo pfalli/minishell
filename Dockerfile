@@ -7,23 +7,21 @@ RUN apt-get update \
 	&& rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
-
 COPY . .
-
 RUN make
 
 
-FROM debian:bookworm-slim
+FROM tsl0922/ttyd:latest
 
-RUN apt-get update \
-	&& apt-get install --no-install-recommends -y \
-		libreadline8 \
-		ttyd \
-		coreutils \
-		grep \
-		sed \
-	&& rm -rf /var/lib/apt/lists/* \
-	&& useradd --create-home --shell /bin/bash demo
+USER root
+
+RUN apk add --no-cache \
+	readline \
+	bash \
+	coreutils \
+	grep \
+	sed \
+	&& adduser -D -s /bin/bash demo
 
 WORKDIR /app
 
