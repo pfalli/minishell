@@ -1,0 +1,12 @@
+services:
+  minishell:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      PORT: "7681"
+    ports:
+      - "7681:7681"
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
